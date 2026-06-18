@@ -41,6 +41,21 @@ jobs:
       - name: Build production dist
         run: pnpm build-local
 
+      - name: Publish marketplace dist branch
+        run: |
+          mkdir publish
+          cp -r dist publish/dist
+          cp manifest.json README.md CHANGELOG.md preview.png preview2.png publish/
+          cd publish
+          git init
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b dist
+          git add .
+          git commit -m "chore: publish marketplace dist ${GITHUB_REF_NAME}"
+          git remote add origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
+          git push --force origin dist
+
       - name: Package release artifact
         run: |
           mkdir -p release

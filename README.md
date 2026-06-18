@@ -92,5 +92,7 @@ See [CHANGELOG.md](CHANGELOG.md) for version history.
 ## 🌿 Branching & CI
 See [BRANCHING.md](BRANCHING.md) for the release branch strategy. GitHub Actions validate typecheck, release metadata, and production builds on pull requests and tags.
 
+Tagged releases also publish a generated `dist` branch for Spicetify Marketplace discovery.
+
 ## ⚖️ License
 MIT License. Open-source and free to use.

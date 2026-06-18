@@ -53,6 +53,18 @@ if (manifest.preview !== "preview.png") {
   errors.push(`manifest.json preview must be "preview.png", got "${manifest.preview}"`);
 }
 
+if (manifest.branch !== "dist") {
+  errors.push(`manifest.json branch must be "dist", got "${manifest.branch}"`);
+}
+
+if (!Array.isArray(manifest.authors) || manifest.authors.length === 0) {
+  errors.push("manifest.json must include at least one author");
+}
+
+if (!Array.isArray(manifest.tags) || manifest.tags.length === 0) {
+  errors.push("manifest.json must include marketplace tags");
+}
+
 if (settings.nameId !== "listening-insights") {
   errors.push(`src/settings.json nameId must be "listening-insights", got "${settings.nameId}"`);
 }
