@@ -1,15 +1,18 @@
 import React from "react";
 import { ArtistStat } from "../utils";
 import locales from "../locales.json";
+import { TrendSnapshot } from "../types/dashboard";
 
 interface Props {
   artists: ArtistStat[];
+  trends?: Record<string, TrendSnapshot>;
   lang: "en" | "id";
 }
 
-export function TopArtists({ artists, lang }: Props) {
+export function TopArtists({ artists, trends = {}, lang }: Props) {
   const [fetchedImages, setFetchedImages] = React.useState<Record<string, string>>({});
   const t = locales[lang];
+  const trendCopy = t.trendBadge;
 
   React.useEffect(() => {
     if (typeof Spicetify === "undefined" || !Spicetify.CosmosAsync) return;
@@ -50,6 +53,7 @@ export function TopArtists({ artists, lang }: Props) {
   if (artists.length === 0) {
     return (
       <div
+        className="li-card"
         style={{
           background: "var(--spice-card)",
           borderRadius: 10,
@@ -77,6 +81,7 @@ export function TopArtists({ artists, lang }: Props) {
 
   return (
     <div
+      className="li-card"
       style={{
         background: "var(--spice-card)",
         borderRadius: 10,
@@ -96,8 +101,11 @@ export function TopArtists({ artists, lang }: Props) {
         {t.topArtistsTitle}
       </div>
 
-      {artists.map((a, i) => (
+      {artists.map((a, i) => {
+        const trend = trends[a.name];
+        return (
         <div
+          className="li-list-row"
           key={a.name}
           style={{
             display: "flex",
@@ -173,6 +181,7 @@ export function TopArtists({ artists, lang }: Props) {
             }}
           >
             <div
+              className="li-bar-fill"
               style={{
                 height: "100%",
                 width: `${Math.round((a.count / maxCount) * 100)}%`,
@@ -191,8 +200,35 @@ export function TopArtists({ artists, lang }: Props) {
           >
             {a.count}x
           </div>
+          <TrendBadge trend={trend} copy={trendCopy} />
         </div>
-      ))}
+        );
+      })}
+    </div>
+  );
+}
+
+function TrendBadge({ trend, copy }: { trend?: TrendSnapshot; copy: typeof locales.en.trendBadge }) {
+  if (!trend) return <div style={{ width: 34, flexShrink: 0 }} />;
+  const isNew = trend.previousRank === null;
+  const rankDelta = trend.rankDelta ?? 0;
+  const positive = isNew || rankDelta > 0 || trend.countDelta > 0;
+  const negative = rankDelta < 0 || trend.countDelta < 0;
+  const color = positive ? "#3dcc6e" : negative ? "#ff6b6b" : "var(--spice-subtext)";
+  const label = isNew ? "+" : rankDelta === 0 ? `${trend.countDelta >= 0 ? "+" : ""}${trend.countDelta}` : `${rankDelta > 0 ? "▲" : "▼"}${Math.abs(rankDelta)}`;
+  return (
+    <div
+      title={isNew ? copy.newEntry : `${copy.rankChange}: ${rankDelta}; ${copy.playChange}: ${trend.countDelta}`}
+      style={{
+        width: 34,
+        textAlign: "right",
+        color,
+        fontSize: 10,
+        fontWeight: 900,
+        flexShrink: 0,
+      }}
+    >
+      {label}
     </div>
   );
 }

@@ -3,15 +3,18 @@
 import React from "react";
 import { TrackStat } from "../utils";
 import locales from "../locales.json";
+import { TrendSnapshot } from "../types/dashboard";
 
 interface Props {
   tracks: TrackStat[];
+  trends?: Record<string, TrendSnapshot>;
   lang: "en" | "id";
 }
 
-export function TopTracks({ tracks, lang }: Props) {
+export function TopTracks({ tracks, trends = {}, lang }: Props) {
   const [fetchedImages, setFetchedImages] = React.useState<Record<string, string>>({});
   const t = locales[lang];
+  const trendCopy = t.trendBadge;
 
   React.useEffect(() => {
     if (typeof Spicetify === "undefined" || !Spicetify.CosmosAsync) return;
@@ -38,6 +41,7 @@ export function TopTracks({ tracks, lang }: Props) {
   if (tracks.length === 0) {
     return (
       <div
+        className="li-card"
         style={{
           background: "var(--spice-card)",
           borderRadius: 10,
@@ -62,6 +66,7 @@ export function TopTracks({ tracks, lang }: Props) {
 
   return (
     <div
+      className="li-card"
       style={{
         background: "var(--spice-card)",
         borderRadius: 10,
@@ -81,8 +86,11 @@ export function TopTracks({ tracks, lang }: Props) {
         {t.topTracksTitle}
       </div>
 
-      {tracks.map((t, i) => (
+      {tracks.map((t, i) => {
+        const trend = trends[t.uri];
+        return (
         <div
+          className="li-list-row"
           key={t.uri}
           onClick={() => Spicetify.Player.playUri(t.uri)}
           style={{
@@ -162,6 +170,7 @@ export function TopTracks({ tracks, lang }: Props) {
             }}
           >
             <div
+              className="li-bar-fill"
               style={{
                 height: "100%",
                 width: `${Math.round((t.count / maxCount) * 100)}%`,
@@ -180,8 +189,35 @@ export function TopTracks({ tracks, lang }: Props) {
           >
             {t.count}x
           </div>
+          <TrendBadge trend={trend} copy={trendCopy} />
         </div>
-      ))}
+        );
+      })}
+    </div>
+  );
+}
+
+function TrendBadge({ trend, copy }: { trend?: TrendSnapshot; copy: typeof locales.en.trendBadge }) {
+  if (!trend) return <div style={{ width: 34, flexShrink: 0 }} />;
+  const isNew = trend.previousRank === null;
+  const rankDelta = trend.rankDelta ?? 0;
+  const positive = isNew || rankDelta > 0 || trend.countDelta > 0;
+  const negative = rankDelta < 0 || trend.countDelta < 0;
+  const color = positive ? "#3dcc6e" : negative ? "#ff6b6b" : "var(--spice-subtext)";
+  const label = isNew ? "+" : rankDelta === 0 ? `${trend.countDelta >= 0 ? "+" : ""}${trend.countDelta}` : `${rankDelta > 0 ? "▲" : "▼"}${Math.abs(rankDelta)}`;
+  return (
+    <div
+      title={isNew ? copy.newEntry : `${copy.rankChange}: ${rankDelta}; ${copy.playChange}: ${trend.countDelta}`}
+      style={{
+        width: 34,
+        textAlign: "right",
+        color,
+        fontSize: 10,
+        fontWeight: 900,
+        flexShrink: 0,
+      }}
+    >
+      {label}
     </div>
   );
 }
