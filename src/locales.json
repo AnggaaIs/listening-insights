@@ -1,0 +1,204 @@
+{
+  "en": {
+    "appName": "Listening Insights",
+    "subTitle": "When you listen to music most — last {days} days",
+    "totalPlays": "Total plays",
+    "listeningTime": "Listening Time",
+    "consistency": "Consistency",
+    "peakHour": "Peak hour",
+    "favDay": "Fav day",
+    "diversity": "Diversity",
+    "lastDays": "last {days} days",
+    "estimatedTotal": "estimated total",
+    "activeDays": "active days",
+    "top3": "Top 3",
+    "busiestHour": "busiest hour",
+    "mostActiveDay": "most active day",
+    "discovery": "Discovery",
+    "songsArtists": "songs / artists",
+    "mins": "mins",
+    "hrs": "hrs",
+    "musicPersona": "Music Persona",
+    "activeStreak": "Active Streak",
+    "longestStreak": "Longest Streak",
+    "days": "days",
+    "listeningInsights": "Listening Insights",
+    "activeTime": "Active Time",
+    "activeTimeDesc": "You listen mostly in the {time}.",
+    "dailyAverage": "Daily Average",
+    "dailyAverageDesc": "About {avg} songs per day.",
+    "skipRate": "Skip Rate",
+    "focusedListener": "Focused listener (rarely skip).",
+    "typicalSkips": "Typical skips (average).",
+    "highlySelective": "Highly selective listener (often skip).",
+    "weekdayVsWeekend": "Weekday vs Weekend",
+    "weekdayWeekendDesc": "{weekday}% weekdays / {weekend}% weekends",
+    "recentVibe": "Recent Vibe",
+    "weeklyActivityTitle": "Weekly Activity Distribution",
+    "dailyTimeTitle": "Daily Time Distribution",
+    "typicalVibe": "Typical Vibe",
+    "warningTitle": "Spotify Connect Sync",
+    "warningDesc": "Since this app is a local Spicetify extension, it only tracks songs while the Spotify Desktop app is open on this computer. If you listen to music on your phone, it WILL be tracked as long as Spotify Desktop is running (via Spotify Connect sync). Plays that happen when Spotify Desktop is closed cannot be recorded.",
+    "antiSkipTitle": "Anti-Skip Filter (Fair Play)",
+    "antiSkipDesc": "To keep your heatmap accurate and fair, a song is only recorded after listening for at least 20 seconds (or half the song length for very short tracks). Rapidly skipping through songs will not be registered as play events.",
+    "dataStoredLocally": "Data is stored locally in your browser — never sent anywhere.",
+    "resetData": "Reset data",
+    "resetModalTitle": "Reset all tracking data?",
+    "resetModalDesc": "This will delete all logged play events and skipped tracks. This action cannot be undone.",
+    "confirmReset": "Reset",
+    "cancel": "Cancel",
+    "topTracksTitle": "Top tracks this period",
+    "topArtistsTitle": "Top artists this period",
+    "noDataTitle": "No data yet — listen to some music first!",
+    "noDataDesc": "Play some music, and data will appear automatically.",
+    "currentVibeLabel": "Current Vibe",
+    "activityTitle": "Activity by hour & day",
+    "legendFew": "Few",
+    "legendMany": "Many",
+    "timeLabels": {
+      "morning": "Morning",
+      "afternoon": "Afternoon",
+      "evening": "Evening",
+      "night": "Night / Late"
+    },
+    "timeOfDay": {
+      "morning": "morning (6 AM - 12 PM)",
+      "afternoon": "afternoon (12 PM - 6 PM)",
+      "evening": "evening (6 PM - 10 PM)",
+      "night": "night (10 PM - 6 AM)"
+    },
+    "personas": {
+      "morning": { "title": "Early Bird", "desc": "You start your mornings with fresh rhythms." },
+      "afternoon": { "title": "Daydreamer", "desc": "Music carries you through the daily rush." },
+      "evening": { "title": "Sunset Lover", "desc": "You wind down your day with soothing vibes." },
+      "night": { "title": "Night Owl", "desc": "The night is young, and so is your playlist." }
+    },
+    "vibes": {
+      "gloomy": {
+        "name": "Gloomy / Melancholy",
+        "desc": "Slow, emotional tracks dominate. Perfect for deep thoughts or nostalgic moments."
+      },
+      "soulful": {
+        "name": "Acoustic / Soulful",
+        "desc": "Heavy acoustic and gentle tracks. Sounds intimate and deeply comforting."
+      },
+      "chill": {
+        "name": "Chill / Relaxed",
+        "desc": "Smooth, low-intensity tunes are keeping you calm. Perfect for studying or unwinding."
+      },
+      "cheerful": {
+        "name": "Energetic & Cheerful",
+        "desc": "Up-beat, high-energy tracks are boosting your vibe. Perfect for active tasks."
+      },
+      "intense": {
+        "name": "Intense & Heavy",
+        "desc": "High energy with darker, heavier tones. Great for raw focus and adrenaline."
+      },
+      "balanced": {
+        "name": "Balanced / Diverse",
+        "desc": "A balanced mix of different feelings and vibes. Adaptive to any situation."
+      }
+    }
+  },
+  "id": {
+    "appName": "Listening Insights",
+    "subTitle": "Kapan lo paling sering dengerin musik — {days} hari terakhir",
+    "totalPlays": "Total Putar",
+    "listeningTime": "Waktu Dengar",
+    "consistency": "Konsistensi",
+    "peakHour": "Jam Tersibuk",
+    "favDay": "Hari Favorit",
+    "diversity": "Keberagaman",
+    "lastDays": "{days} hari terakhir",
+    "estimatedTotal": "estimasi total",
+    "activeDays": "hari aktif mendengarkan",
+    "top3": "Puncak",
+    "busiestHour": "puncak aktivitas",
+    "mostActiveDay": "paling aktif",
+    "discovery": "Eksplorasi",
+    "songsArtists": "lagu / artis unik",
+    "mins": "mnt",
+    "hrs": "jam",
+    "musicPersona": "Karakter Musikmu",
+    "activeStreak": "Streak Aktif",
+    "longestStreak": "Streak Terbaik",
+    "days": "hari",
+    "listeningInsights": "Wawasan Musikmu",
+    "activeTime": "Waktu Teraktif",
+    "activeTimeDesc": "Lo paling sering dengerin musik waktu {time}.",
+    "dailyAverage": "Rata-rata Harian",
+    "dailyAverageDesc": "Sekitar {avg} lagu per hari.",
+    "skipRate": "Rasio Skip",
+    "focusedListener": "Pendengar fokus (jarang skip).",
+    "typicalSkips": "Rasio skip wajar (normal).",
+    "highlySelective": "Sangat selektif (sering skip).",
+    "weekdayVsWeekend": "Kerja vs Akhir Pekan",
+    "weekdayWeekendDesc": "{weekday}% hari kerja / {weekend}% akhir pekan",
+    "recentVibe": "Vibe Terbaru",
+    "weeklyActivityTitle": "Distribusi Aktivitas Mingguan",
+    "dailyTimeTitle": "Distribusi Waktu Harian",
+    "typicalVibe": "Mood Dominan",
+    "warningTitle": "Sinkronisasi Spotify Connect",
+    "warningDesc": "Karena aplikasi ini adalah ekstensi lokal Spicetify, data lagu hanya tercatat jika Spotify Desktop di PC ini sedang aktif berjalan. Jika lo memutar lagu di HP, pemutaran TETAP ter-track selama Spotify Desktop di PC dalam keadaan terbuka (melalui sinkronisasi Spotify Connect). Lagu yang diputar saat Spotify Desktop ditutup tidak bisa terekam.",
+    "antiSkipTitle": "Proteksi Anti-Skip (Lebih Adil)",
+    "antiSkipDesc": "Supaya heatmap lebih adil dan akurat, lagu baru akan tercatat jika lo dengerin minimal selama 20 detik (atau setengah durasi lagu untuk track yang sangat pendek). Kalau cuma skip-skip cepat, lagu tersebut nggak bakal masuk hitungan.",
+    "dataStoredLocally": "Data disimpan lokal di browser lo — tidak dikirim ke mana pun.",
+    "resetData": "Reset data",
+    "resetModalTitle": "Reset semua data pelacakan?",
+    "resetModalDesc": "Ini bakal ngehapus semua riwayat putar dan lagu yang di-skip. Tindakan ini tidak bisa dibatalkan.",
+    "confirmReset": "Reset",
+    "cancel": "Batal",
+    "topTracksTitle": "Lagu teratas periode ini",
+    "topArtistsTitle": "Artis teratas periode ini",
+    "noDataTitle": "Belum ada data — yuk dengerin musik dulu!",
+    "noDataDesc": "Dengerin musik dulu, data bakal muncul otomatis.",
+    "currentVibeLabel": "Vibe Saat Ini",
+    "activityTitle": "Aktivitas per jam & hari",
+    "legendFew": "Jarang",
+    "legendMany": "Sering",
+    "timeLabels": {
+      "morning": "Pagi",
+      "afternoon": "Siang/Sore",
+      "evening": "Malam",
+      "night": "Tengah Malam"
+    },
+    "timeOfDay": {
+      "morning": "pagi hari (06:00 - 12:00)",
+      "afternoon": "siang/sore (12:00 - 18:00)",
+      "evening": "malam (18:00 - 22:00)",
+      "night": "tengah malam/dini hari (22:00 - 06:00)"
+    },
+    "personas": {
+      "morning": { "title": "Pagi Produktif", "desc": "Lo memulai pagi hari dengan ketukan segar." },
+      "afternoon": { "title": "Siang Ceria", "desc": "Musik nemenin lo melewati rutinitas siang hari." },
+      "evening": { "title": "Sunset Lover", "desc": "Lo menutup hari dengan alunan yang santai." },
+      "night": { "title": "Burung Hantu", "desc": "Malam masih muda, playlist lo juga masih asyik." }
+    },
+    "vibes": {
+      "gloomy": {
+        "name": "Galau / Sendu",
+        "desc": "Lagu-lagu sendu mendominasi. Cocok buat nemenin ngelamun atau bernostalgia."
+      },
+      "soulful": {
+        "name": "Syahdu / Intim",
+        "desc": "Didominasi alunan akustik dan vokal hangat. Terasa intim dan menenangkan jiwa."
+      },
+      "chill": {
+        "name": "Santai / Rileks",
+        "desc": "Lagu dengan tempo sedang dan vibes adem. Enak buat nemenin belajar atau santai."
+      },
+      "cheerful": {
+        "name": "Ceria / Bersemangat",
+        "desc": "Banyak lagu up-beat dan ceria. Bikin mood naik dan pengen ikutan joget!"
+      },
+      "intense": {
+        "name": "Intens / Keras",
+        "desc": "Lagu berenergi tinggi dengan nuansa gelap atau cadas. Cocok buat naikin adrenalin."
+      },
+      "balanced": {
+        "name": "Dinamis / Berwarna",
+        "desc": "Perpaduan berbagai mood yang seimbang. Menyesuaikan segala situasi."
+      }
+    }
+  }
+}

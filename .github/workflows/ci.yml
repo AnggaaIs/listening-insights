@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+      - "feature/**"
+      - "fix/**"
+      - "release/**"
+      - "hotfix/**"
+  pull_request:
+    branches:
+      - main
+      - dev
+
+jobs:
+  validate:
+    name: Validate and build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Release metadata check
+        run: pnpm release:check
+
+      - name: Build production dist
+        run: pnpm build-local
+
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: listening-insights-dist
+          path: |
+            dist/**
+            manifest.json
+            README.md
+            CHANGELOG.md
+            preview.png
+            preview2.png
+          if-no-files-found: error

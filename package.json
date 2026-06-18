@@ -1,0 +1,27 @@
+{
+  "name": "listening-insights",
+  "version": "1.0.0",
+  "description": "A local-first Spicetify dashboard for Spotify listening heatmaps, recaps, goals, vibes, recommendations, and advanced taste insights.",
+  "private": true,
+  "scripts": {
+    "build": "spicetify-creator",
+    "build-local": "spicetify-creator --out=dist --minify",
+    "typecheck": "tsc --noEmit",
+    "release:check": "node scripts/release-check.mjs",
+    "watch": "spicetify-creator --watch"
+  },
+  "keywords": [
+    "spicetify",
+    "spotify",
+    "listening-insights",
+    "heatmap",
+    "music-analytics"
+  ],
+  "author": "AnggaaIs",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "spicetify-creator": "^1.0.17"
+  }
+}

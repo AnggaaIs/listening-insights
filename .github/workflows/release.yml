@@ -1,0 +1,55 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and publish GitHub release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Release metadata check
+        run: pnpm release:check
+
+      - name: Build production dist
+        run: pnpm build-local
+
+      - name: Package release artifact
+        run: |
+          mkdir -p release
+          cp -r dist release/dist
+          cp manifest.json README.md CHANGELOG.md preview.png preview2.png release/
+          tar -czf listening-insights-${GITHUB_REF_NAME}.tar.gz -C release .
+          zip -r listening-insights-${GITHUB_REF_NAME}.zip release
+
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            listening-insights-${{ github.ref_name }}.tar.gz
+            listening-insights-${{ github.ref_name }}.zip
