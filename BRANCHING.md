@@ -22,7 +22,7 @@ Install local Git hooks once after cloning:
 pnpm hooks:install
 ```
 
-The hooks run release checks, rebuild `dist`, and block pushes when generated release files are out of date.
+The pre-commit hook runs release checks, rebuilds `dist`, and stages generated release files. The pre-push hook only validates typecheck and release metadata so it does not mutate files during push.
 
 1. Branch from `dev`:
    ```bash
