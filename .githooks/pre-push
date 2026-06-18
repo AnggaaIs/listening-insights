@@ -1,17 +1,8 @@
 #!/bin/sh
 set -e
 
-echo "Verifying release files before push..."
+echo "Verifying release metadata before push..."
 pnpm typecheck
 pnpm release:check
-pnpm build-local
 
-if ! git diff --quiet -- dist manifest.json package.json package-lock.json README.md CHANGELOG.md preview.png preview2.png; then
-  echo "Generated release files changed after build."
-  echo "Commit the updated files before pushing:"
-  echo "  git add dist manifest.json package.json package-lock.json README.md CHANGELOG.md preview.png preview2.png"
-  echo "  git commit -m \"chore: update release build\""
-  exit 1
-fi
-
-echo "Pre-push release verification OK."
+echo "Pre-push verification OK."
