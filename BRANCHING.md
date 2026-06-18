@@ -59,7 +59,8 @@ The pre-commit hook runs release checks, rebuilds `dist`, and stages generated r
    git tag v1.1.0
    git push origin v1.1.0
    ```
-7. Merge `main` back into `dev`.
+7. The release workflow builds artifacts and force-publishes the Marketplace-ready `dist` branch.
+8. Merge `main` back into `dev`.
 
 ## Hotfix Flow
 
