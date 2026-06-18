@@ -1,85 +1,118 @@
 # Branching Strategy
 
-Listening Insights uses a small release-focused Git flow.
+Solo-maintainer flow: keep it simple.
 
-## Long-Lived Branches
+## Branches
 
-- `main`: production-ready code only. Every tag is cut from this branch.
-- `dev`: integration branch for completed features and fixes before release.
+- `main`: source code, docs, CI, release tags.
+- `dist`: generated Marketplace build, published automatically by GitHub Actions.
 
-## Short-Lived Branches
+Do not edit `dist` manually. The release workflow force-publishes it from `main` when a tag is pushed.
 
-- `feature/<name>`: new feature work.
-- `fix/<name>`: normal bug fixes.
-- `release/vX.Y.Z`: final release stabilization.
-- `hotfix/vX.Y.Z`: urgent production fixes branched from `main`.
-
-## Normal Feature Flow
-
-Install local Git hooks once after cloning:
+## One-Time Local Setup
 
 ```bash
+pnpm install
 pnpm hooks:install
 ```
 
-The pre-commit hook runs release checks, rebuilds `dist`, and stages generated release files. The pre-push hook only validates typecheck and release metadata so it does not mutate files during push.
+Hooks:
 
-1. Branch from `dev`:
-   ```bash
-   git checkout dev
-   git pull
-   git checkout -b feature/my-feature
-   ```
-2. Open a PR into `dev`.
-3. CI must pass.
-4. Squash or merge into `dev`.
+- `pre-commit`: typecheck, release check, build `dist`, stage generated release files.
+- `pre-push`: typecheck and release check only. It does not mutate files.
 
-## Release Flow
+## Daily Work
 
-1. Create release branch from `dev`:
-   ```bash
-   git checkout dev
-   git pull
-   git checkout -b release/v1.1.0
-   ```
-2. Update `package.json`, `package-lock.json`, and `CHANGELOG.md`.
-3. Run:
-   ```bash
-   pnpm install
-   pnpm typecheck
-   pnpm release:check
-   pnpm build-local
-   ```
-4. Open PR from `release/v1.1.0` to `main`.
-5. Merge after CI passes.
-6. Tag release:
-   ```bash
-   git checkout main
-   git pull
-   git tag v1.1.0
-   git push origin v1.1.0
-   ```
-7. The release workflow builds artifacts and force-publishes the Marketplace-ready `dist` branch.
-8. Merge `main` back into `dev`.
+Work directly on `main`:
 
-## Hotfix Flow
+```bash
+git checkout main
+git pull origin main
+# edit files
+git add .
+git commit -m "feat: describe change"
+git push origin main
+```
 
-1. Branch from `main`:
-   ```bash
-   git checkout main
-   git pull
-   git checkout -b hotfix/v1.0.1
-   ```
-2. Fix, test, and open PR to `main`.
-3. Tag patch release after merge.
-4. Merge `main` back into `dev`.
+## Bigger Changes
 
-## Branch Protection Recommendation
+Use a temporary branch:
 
-Protect `main` and `dev`:
+```bash
+git checkout main
+git pull origin main
+git checkout -b feature/name
+# edit files
+git add .
+git commit -m "feat: name"
+git push -u origin feature/name
+```
 
-- Require pull requests.
+Open PR:
+
+```text
+feature/name -> main
+```
+
+After merge:
+
+```bash
+git checkout main
+git pull origin main
+```
+
+Delete the temporary branch if GitHub did not auto-delete it.
+
+## Release
+
+1. Update version and changelog if needed:
+   - `package.json`
+   - `package-lock.json`
+   - `CHANGELOG.md`
+2. Commit to `main`.
+3. Tag from `main`:
+
+```bash
+git checkout main
+git pull origin main
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+The release workflow will:
+
+- build production `dist`
+- publish GitHub release artifacts
+- force-publish the Marketplace-ready `dist` branch
+
+## Hotfix
+
+Small urgent fix:
+
+```bash
+git checkout main
+git pull origin main
+# fix files
+git add .
+git commit -m "fix: urgent issue"
+git push origin main
+git tag v1.0.1
+git push origin v1.0.1
+```
+
+## GitHub Rulesets
+
+Protect `main`:
+
 - Require CI to pass.
-- Require up-to-date branches before merge.
 - Block force pushes.
-- Block direct pushes to `main`.
+- Restrict deletions.
+- Optional: require PRs for bigger changes.
+
+Protect tags:
+
+- Target: `v*`
+- Restrict deletions.
+- Block force pushes.
+
+Do not protect `dist` with force-push blocking. Release workflow needs to overwrite it.
