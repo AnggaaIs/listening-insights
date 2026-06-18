@@ -49,11 +49,11 @@ Download the pre-built `dist` branch and extract it into your Spicetify `CustomA
 #### Windows (PowerShell)
 ```powershell
 # Download the latest built release
-Invoke-WebRequest -Uri "https://github.com/AnggaaIs/spotify-heatmap/archive/refs/heads/dist.zip" -OutFile "$env:TEMP\li-dist.zip"
+Invoke-WebRequest -Uri "https://github.com/AnggaaIs/listening-insights/archive/refs/heads/dist.zip" -OutFile "$env:TEMP\li-dist.zip"
 Expand-Archive -Path "$env:TEMP\li-dist.zip" -DestinationPath "$env:APPDATA\spicetify\CustomApps" -Force
 Remove-Item "$env:TEMP\li-dist.zip"
-# Rename the extracted folder (GitHub names it "spotify-heatmap-dist")
-Rename-Item "$env:APPDATA\spicetify\CustomApps\spotify-heatmap-dist" "listening-insights" -ErrorAction SilentlyContinue
+# Rename the extracted folder (GitHub names it "listening-insights-dist")
+Rename-Item "$env:APPDATA\spicetify\CustomApps\listening-insights-dist" "listening-insights" -ErrorAction SilentlyContinue
 spicetify config custom_apps listening-insights
 spicetify apply
 ```
@@ -61,11 +61,11 @@ spicetify apply
 #### macOS / Linux (Terminal)
 ```bash
 # Download the latest built release
-curl -L -o /tmp/li-dist.zip https://github.com/AnggaaIs/spotify-heatmap/archive/refs/heads/dist.zip
+curl -L -o /tmp/li-dist.zip https://github.com/AnggaaIs/listening-insights/archive/refs/heads/dist.zip
 unzip -o /tmp/li-dist.zip -d ~/.config/spicetify/CustomApps
 rm /tmp/li-dist.zip
-# Rename the extracted folder (GitHub names it "spotify-heatmap-dist")
-mv ~/.config/spicetify/CustomApps/spotify-heatmap-dist ~/.config/spicetify/CustomApps/listening-insights 2>/dev/null || true
+# Rename the extracted folder (GitHub names it "listening-insights-dist")
+mv ~/.config/spicetify/CustomApps/listening-insights-dist ~/.config/spicetify/CustomApps/listening-insights 2>/dev/null || true
 spicetify config custom_apps listening-insights
 spicetify apply
 ```
@@ -78,8 +78,8 @@ If you want to customize or build the extension from source:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/AnggaaIs/spotify-heatmap.git
-   cd spotify-heatmap
+   git clone https://github.com/AnggaaIs/listening-insights.git
+   cd listening-insights
    ```
 2. Install dependencies:
    ```bash
