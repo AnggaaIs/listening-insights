@@ -1,10 +1,10 @@
 # Branching Strategy
 
-Solo-maintainer flow: keep it simple.
+Solo-maintainer flow with branch protection: all changes go through pull requests.
 
 ## Branches
 
-- `main`: source code, docs, CI, release tags.
+- `main`: source code, docs, CI, release tags. Protected — no direct pushes.
 - `dist`: generated Marketplace build, published automatically by GitHub Actions.
 
 Do not edit `dist` manually. The release workflow force-publishes it from `main` when a tag is pushed.
@@ -23,38 +23,21 @@ Hooks:
 
 ## Daily Work
 
-Work directly on `main`:
+Create a feature/fix branch, push, and open a PR:
 
 ```bash
 git checkout main
 git pull origin main
+git checkout -b feat/your-change
 # edit files
 git add .
 git commit -m "feat: describe change"
-git push origin main
+git push -u origin feat/your-change
 ```
 
-## Bigger Changes
+Open PR: `feat/your-change -> main`
 
-Use a temporary branch:
-
-```bash
-git checkout main
-git pull origin main
-git checkout -b feature/name
-# edit files
-git add .
-git commit -m "feat: name"
-git push -u origin feature/name
-```
-
-Open PR:
-
-```text
-feature/name -> main
-```
-
-After merge:
+After merge via GitHub:
 
 ```bash
 git checkout main
@@ -63,13 +46,38 @@ git pull origin main
 
 Delete the temporary branch if GitHub did not auto-delete it.
 
+## Hotfix
+
+Same flow — no direct pushes allowed:
+
+```bash
+git checkout main
+git pull origin main
+git checkout -b fix/urgent-issue
+# fix files
+git add .
+git commit -m "fix: urgent issue"
+git push -u origin fix/urgent-issue
+```
+
+Open PR: `fix/urgent-issue -> main`
+
+After merge, tag from `main`:
+
+```bash
+git checkout main
+git pull origin main
+git tag v1.0.1
+git push origin v1.0.1
+```
+
 ## Release
 
 1. Update version and changelog if needed:
    - `package.json`
    - `package-lock.json`
    - `CHANGELOG.md`
-2. Commit to `main`.
+2. Commit via PR to `main`.
 3. Tag from `main`:
 
 ```bash
@@ -85,29 +93,15 @@ The release workflow will:
 - publish GitHub release artifacts
 - force-publish the Marketplace-ready `dist` branch
 
-## Hotfix
-
-Small urgent fix:
-
-```bash
-git checkout main
-git pull origin main
-# fix files
-git add .
-git commit -m "fix: urgent issue"
-git push origin main
-git tag v1.0.1
-git push origin v1.0.1
-```
-
 ## GitHub Rulesets
 
 Protect `main`:
 
+- Require PRs for all changes.
 - Require CI to pass.
 - Block force pushes.
 - Restrict deletions.
-- Optional: require PRs for bigger changes.
+- No merge commits (squash merge only).
 
 Protect tags:
 
