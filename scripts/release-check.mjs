@@ -5,8 +5,10 @@ const requiredFiles = [
   "CHANGELOG.md",
   "manifest.json",
   "package.json",
-  "preview.png",
-  "preview2.png",
+  "images/preview1.png",
+  "images/preview2.png",
+  "images/preview3.png",
+  "images/preview4.png",
   "src/settings.json",
 ];
 
@@ -49,8 +51,8 @@ if (manifest.name !== "Listening Insights") {
   errors.push(`manifest.json name must be "Listening Insights", got "${manifest.name}"`);
 }
 
-if (manifest.preview !== "preview.png") {
-  errors.push(`manifest.json preview must be "preview.png", got "${manifest.preview}"`);
+if (manifest.preview !== "images/preview1.png") {
+  errors.push(`manifest.json preview must be "images/preview1.png", got "${manifest.preview}"`);
 }
 
 if (manifest.branch !== "dist") {
@@ -69,14 +71,16 @@ if (settings.nameId !== "listening-insights") {
   errors.push(`src/settings.json nameId must be "listening-insights", got "${settings.nameId}"`);
 }
 
-for (const image of ["preview.png", "preview2.png"]) {
+for (const image of ["images/preview1.png", "images/preview2.png", "images/preview3.png", "images/preview4.png"]) {
   if (existsSync(image) && statSync(image).size < 10_000) {
     errors.push(`${image} looks too small for a release preview`);
   }
 }
 
-if (!readme.includes("preview.png") || !readme.includes("preview2.png")) {
-  errors.push("README.md must reference preview.png and preview2.png");
+for (const image of ["images/preview1.png", "images/preview2.png", "images/preview3.png", "images/preview4.png"]) {
+  if (!readme.includes(image)) {
+    errors.push(`README.md must reference ${image}`);
+  }
 }
 
 if (!changelog.includes(`## ${pkg.version}`)) {

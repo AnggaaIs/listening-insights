@@ -16,6 +16,7 @@ All notable changes to Listening Insights are documented here.
 - Data Manager (export/import/clear) moved from Patterns tab to Data tab for better tab relevance.
 
 ### Fixed
+- Marketplace preview image paths now point to the `images/` folder in `manifest.json`, README, CI artifacts, release artifacts, and release validation.
 - Sequential (non-parallel) artist/track image fetching with 250ms delay to avoid Spotify API rate limiting (429 errors).
 - Genre artist fetching in AdvancedInsights changed from parallel `Promise.all` to sequential with 250ms delay + per-artist genre cache for stable hourly breakdown.
 

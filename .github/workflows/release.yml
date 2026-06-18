@@ -45,7 +45,8 @@ jobs:
         run: |
           mkdir publish
           cp -r dist publish/dist
-          cp manifest.json README.md CHANGELOG.md preview.png preview2.png publish/
+          cp -r images publish/images
+          cp manifest.json README.md CHANGELOG.md publish/
           cd publish
           git init
           git config user.name "github-actions[bot]"
@@ -60,7 +61,8 @@ jobs:
         run: |
           mkdir -p release
           cp -r dist release/dist
-          cp manifest.json README.md CHANGELOG.md preview.png preview2.png release/
+          cp -r images release/images
+          cp manifest.json README.md CHANGELOG.md release/
           tar -czf listening-insights-${GITHUB_REF_NAME}.tar.gz -C release .
           zip -r listening-insights-${GITHUB_REF_NAME}.zip release
 
