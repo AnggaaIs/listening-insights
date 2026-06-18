@@ -2,6 +2,14 @@
 
 All notable changes to Listening Insights are documented here.
 
+## 1.0.1 - 2026-06-18
+
+### Changed
+- Simplified the branch flow to `main` for source and generated `dist` for Marketplace.
+- Added automated `dist` branch publishing on tagged releases.
+- Improved local Git hooks so pre-push checks do not mutate generated files.
+- Updated release and branching documentation for solo open-source maintenance.
+
 ## 1.0.0 - 2026-06-18
 
 ### Added
