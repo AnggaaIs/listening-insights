@@ -16,6 +16,14 @@ Listening Insights uses a small release-focused Git flow.
 
 ## Normal Feature Flow
 
+Install local Git hooks once after cloning:
+
+```bash
+pnpm hooks:install
+```
+
+The hooks run release checks, rebuild `dist`, and block pushes when generated release files are out of date.
+
 1. Branch from `dev`:
    ```bash
    git checkout dev

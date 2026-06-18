@@ -1,0 +1,14 @@
+#!/bin/sh
+set -e
+
+echo "Running release checks before commit..."
+pnpm typecheck
+pnpm release:check
+
+echo "Building dist before commit..."
+pnpm build-local
+
+echo "Staging generated release files..."
+git add dist manifest.json package.json package-lock.json README.md CHANGELOG.md preview.png preview2.png
+
+echo "Pre-commit release build OK."
