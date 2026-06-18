@@ -1,6 +1,6 @@
 {
   "name": "listening-insights",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A local-first Spicetify dashboard for Spotify listening heatmaps, recaps, goals, vibes, recommendations, and advanced taste insights.",
   "private": true,
   "scripts": {
