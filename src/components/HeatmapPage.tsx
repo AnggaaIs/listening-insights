@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import locales from "../locales.json";
 import { clearHistory } from "../store";
-import { generateStyles, ThemeName } from "../theme";
+import { generateStyles } from "../theme";
 import { DayRange, Language, PageTab } from "../types/dashboard";
 import { useListeningDashboard } from "../hooks/useListeningDashboard";
 import { DashboardHeader } from "./DashboardHeader";
@@ -22,10 +22,6 @@ export function HeatmapPage() {
     const saved = localStorage.getItem("spicetify-heatmap-lang");
     return saved === "en" || saved === "id" ? saved : "en";
   });
-  const [theme, setTheme] = useState<ThemeName>(() => {
-    const saved = localStorage.getItem("spicetify-heatmap-theme");
-    return saved === "green" || saved === "purple" || saved === "orange" || saved === "cyan" ? saved : "green";
-  });
   const { data, refresh } = useListeningDashboard(days);
   const copy = locales[lang];
   const tabs: Array<{ key: PageTab; label: string }> = [
@@ -34,11 +30,6 @@ export function HeatmapPage() {
     { key: "library", label: copy.tabs.library },
     { key: "data", label: copy.tabs.data },
   ];
-
-  const handleThemeChange = (newTheme: ThemeName) => {
-    setTheme(newTheme);
-    localStorage.setItem("spicetify-heatmap-theme", newTheme);
-  };
 
   const handleLangChange = (newLang: Language) => {
     setLang(newLang);
@@ -52,7 +43,7 @@ export function HeatmapPage() {
 
   return (
     <>
-      <style>{generateStyles(theme)}</style>
+      <style>{generateStyles()}</style>
       <div
         style={{
           padding: "80px 24px 32px",
@@ -67,9 +58,7 @@ export function HeatmapPage() {
         <DashboardHeader
           days={days}
           lang={lang}
-          theme={theme}
           subtitle={copy.subTitle}
-          onThemeChange={handleThemeChange}
           onLangChange={handleLangChange}
         />
 
@@ -78,7 +67,6 @@ export function HeatmapPage() {
           peakTime={data.peakTime}
           currentStreak={data.currentStreak}
           longestStreak={data.longestStreak}
-          theme={theme}
           copy={copy}
         />
 
@@ -120,7 +108,7 @@ export function HeatmapPage() {
         )}
         {activeTab === "data" && (
           <div className="li-tab-panel">
-            <DataTab copy={copy} onReset={() => setShowResetModal(true)} />
+            <DataTab copy={copy} history={data.historyEvents} onReset={() => setShowResetModal(true)} onDataChange={refresh} />
           </div>
         )}
       </div>

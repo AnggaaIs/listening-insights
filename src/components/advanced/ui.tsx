@@ -5,6 +5,9 @@ export const cardStyle: React.CSSProperties = {
   borderRadius: 10,
   padding: "16px 20px",
   border: "1px solid var(--spice-button-disabled)",
+  minWidth: 0,
+  overflowWrap: "break-word",
+  wordBreak: "break-word",
 };
 
 export const buttonStyle: React.CSSProperties = {

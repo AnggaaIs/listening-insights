@@ -38,7 +38,7 @@
     "warningTitle": "Spotify Connect Sync",
     "warningDesc": "Since this app is a local Spicetify extension, it only tracks songs while the Spotify Desktop app is open on this computer. If you listen to music on your phone, it WILL be tracked as long as Spotify Desktop is running (via Spotify Connect sync). Plays that happen when Spotify Desktop is closed cannot be recorded.",
     "antiSkipTitle": "Anti-Skip Filter (Fair Play)",
-    "antiSkipDesc": "To keep your heatmap accurate and fair, a song is only recorded after listening for at least 20 seconds (or half the song length for very short tracks). Rapidly skipping through songs will not be registered as play events.",
+    "antiSkipDesc": "A song counts after listening to a meaningful portion based on its actual playback progress — not a fixed timer. The threshold adapts per track (15% to 50% of the song), so rapid skipping or waiting out a timer won't fool the system. Shorter songs need a higher percentage; longer songs need more absolute listening time.",
     "dataStoredLocally": "Data is stored locally in your browser — never sent anywhere.",
     "resetData": "Reset data",
     "resetModalTitle": "Reset all tracking data?",
@@ -139,6 +139,7 @@
       "peakHour": "Peak hour",
       "goals": "Goals",
       "genreInsights": "Genre Insights",
+      "genreDistribution": "Genre Distribution",
       "noGenres": "Genre data appears after Spotify returns artist metadata.",
       "calendar": "Listening Heatmap",
       "recommendations": "Smart Recommendations",
@@ -188,7 +189,15 @@
         "afternoon": "Day",
         "evening": "Evening",
         "night": "Late"
-      }
+      },
+      "skipAnalyticsTitle": "Skip Analytics",
+      "skipRateByTime": "Skip Rate by Time of Day",
+      "mostSkippedTracks": "Most Skipped Tracks",
+      "mostSkippedArtists": "Most Skipped Artists",
+      "noSkipData": "Not enough skip data yet.",
+      "hourlyGenreTitle": "Hourly Genre Breakdown",
+      "hourlyGenreTop": "Top: {genre}",
+      "noHourlyGenreData": "Genre data not available yet."
     },
     "analyticsCopy": {
       "dailyMixTitle": "Start with Daily Mix",
@@ -225,7 +234,8 @@
         "longGap": "Long tracking gap. Plays while Desktop is closed cannot be recorded."
       }
     },
-    "tabHint": "Choose a section to keep the dashboard focused."
+    "tabHint": "Choose a section to keep the dashboard focused.",
+    "library": {}
   },
   "id": {
     "appName": "Listening Insights",
@@ -266,7 +276,7 @@
     "warningTitle": "Sinkronisasi Spotify Connect",
     "warningDesc": "Karena aplikasi ini adalah ekstensi lokal Spicetify, data lagu hanya tercatat jika Spotify Desktop di PC ini sedang aktif berjalan. Jika lo memutar lagu di HP, pemutaran TETAP ter-track selama Spotify Desktop di PC dalam keadaan terbuka (melalui sinkronisasi Spotify Connect). Lagu yang diputar saat Spotify Desktop ditutup tidak bisa terekam.",
     "antiSkipTitle": "Proteksi Anti-Skip (Lebih Adil)",
-    "antiSkipDesc": "Supaya heatmap lebih adil dan akurat, lagu baru akan tercatat jika lo dengerin minimal selama 20 detik (atau setengah durasi lagu untuk track yang sangat pendek). Kalau cuma skip-skip cepat, lagu tersebut nggak bakal masuk hitungan.",
+    "antiSkipDesc": "Lagu dihitung setelah lo dengerin bagian yang cukup berarti berdasarkan progress asli pemutaran — bukan timer tetap. Ambang batas menyesuaikan per lagu (15% sampai 50%), jadi susah diakalin. Lagu pendek butuh persentase lebih besar; lagu panjang butuh waktu dengar absolut lebih lama.",
     "dataStoredLocally": "Data disimpan lokal di browser lo — tidak dikirim ke mana pun.",
     "resetData": "Reset data",
     "resetModalTitle": "Reset semua data pelacakan?",
@@ -367,6 +377,7 @@
       "peakHour": "Jam ramai",
       "goals": "Target",
       "genreInsights": "Insight Genre",
+      "genreDistribution": "Distribusi Genre",
       "noGenres": "Data genre muncul setelah Spotify mengirim metadata artis.",
       "calendar": "Heatmap Dengar",
       "recommendations": "Rekomendasi Pintar",
@@ -416,7 +427,15 @@
         "afternoon": "Siang",
         "evening": "Malam",
         "night": "Dini"
-      }
+      },
+      "skipAnalyticsTitle": "Analisis Skip",
+      "skipRateByTime": "Rasio Skip per Waktu",
+      "mostSkippedTracks": "Lagu Paling Sering Di-skip",
+      "mostSkippedArtists": "Artis Paling Sering Di-skip",
+      "noSkipData": "Data skip belum cukup.",
+      "hourlyGenreTitle": "Genre per Waktu",
+      "hourlyGenreTop": "Top: {genre}",
+      "noHourlyGenreData": "Data genre belum tersedia."
     },
     "analyticsCopy": {
       "dailyMixTitle": "Mulai dari Daily Mix",
@@ -453,6 +472,25 @@
         "longGap": "Gap tracking cukup lama. Plays saat Desktop tertutup tidak bisa direkam."
       }
     },
-    "tabHint": "Pilih bagian agar dashboard tetap fokus."
+    "tabHint": "Pilih bagian agar dashboard tetap fokus.",
+    "library": {
+      "saveTitle": "Simpan ke Playlist Spotify",
+      "saveDesc": "Ubah lagu teratas periode ini jadi playlist Spotify.",
+      "createButton": "Buat",
+      "syncButton": "Sinkron",
+      "syncOn": "Auto",
+      "syncOff": "Sekali",
+      "enableSync": "Aktifkan auto-sync — update playlist yang sama",
+      "disableSync": "Nonaktifkan auto-sync — bikin playlist baru tiap kali",
+      "playlistPrefix": "Listening Insights —",
+      "playlistDesc": "Lagu teratas saya dari Listening Insights",
+      "created": "Playlist berhasil dibuat!",
+      "synced": "Playlist diperbarui!",
+      "openButton": "Buka",
+      "noTracks": "Belum ada lagu untuk disimpan.",
+      "spicetifyNeeded": "Spotify API tidak tersedia.",
+      "failed": "Gagal membuat playlist.",
+      "rateLimited": "Batas rate Spotify tercapai. Tunggu sebentar dan coba lagi."
+    }
   }
 }

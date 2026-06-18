@@ -15,6 +15,7 @@ The package/app id is `listening-insights`.
 - Dashboard orchestration is intentionally thin in `src/components/HeatmapPage.tsx`.
 - Dashboard state and refresh lifecycle live in `src/hooks/useListeningDashboard.ts`.
 - Tab sections live in `src/components/tabs/`.
+- Chart components live in `src/components/charts/`.
 - Advanced insight helpers live in `src/components/advanced/`.
 - High-value local analytics live in `src/analytics/`.
 - Marketplace metadata is in `manifest.json`.
@@ -38,7 +39,6 @@ Playback data is local only:
 - `spicetify-heatmap-v1`: play history.
 - `spicetify-heatmap-skips-v1`: skip timestamps.
 - `spicetify-heatmap-lang`: selected language.
-- `spicetify-heatmap-theme`: selected heatmap theme.
 
 Do not add a backend, analytics service, account database, or external tracking unless explicitly requested.
 
@@ -52,7 +52,7 @@ Allowed Spotify API usage in this app should stay limited and failure-tolerant:
 - Artist metadata/genres for genre insights.
 - Spotify search/navigation helpers.
 
-Every Spotify API call must tolerate failure without blocking the dashboard.
+Every Spotify API call must tolerate failure without blocking the dashboard. Playlist creation (in Library tab) is an optional action that gracefully shows an error message when unavailable.
 
 ## UI Structure
 
@@ -60,7 +60,7 @@ The main dashboard uses tabs to avoid a crowded single page:
 
 - Overview: primary heatmap and simple listening insights.
 - Patterns: advanced analytics, active-time trend, goals, calendar, recommendations, and pattern charts.
-- Library: top tracks and top artists.
+- Library: top tracks and top artists, playlist export.
 - Library trend charts and arrows compare the selected period with the immediately previous period. Keep those comparisons local and derived from stored play events.
 - Library charts use Recharts. Keep chart components small and avoid adding another charting library unless Recharts cannot handle the required visualization.
 - Data: privacy/sync/anti-skip notices and reset entry point.
@@ -80,10 +80,11 @@ The Listening Coach is intentionally local-only. It should use playback history,
 
 ## Release Notes
 
+Every meaningful code change MUST update `CHANGELOG.md` with a clear entry under the relevant version section (Added / Changed / Removed / Fixed).
+
 When changing public behavior or marketplace-visible claims:
 
 - Update `README.md`.
-- Update `CHANGELOG.md`.
 - Update `manifest.json` if the short description changes.
 - Keep generated `dist` changes aligned with source builds.
 

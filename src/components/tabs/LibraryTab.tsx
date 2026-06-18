@@ -12,6 +12,7 @@ interface Props {
 
 export function LibraryTab({ data, lang }: Props) {
   const copy = locales[lang].rankCharts;
+
   return (
     <div style={{ display: "grid", gap: 16, marginBottom: 16 }}>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16 }}>
@@ -28,6 +29,7 @@ export function LibraryTab({ data, lang }: Props) {
           lang={lang}
         />
       </div>
+
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16 }}>
         <TopTracks tracks={data.tracks} trends={data.trackTrends} lang={lang} />
         <TopArtists artists={data.artists} trends={data.artistTrends} lang={lang} />
