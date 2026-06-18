@@ -53,6 +53,5 @@ jobs:
             manifest.json
             README.md
             CHANGELOG.md
-            preview.png
-            preview2.png
+            images/**
           if-no-files-found: error

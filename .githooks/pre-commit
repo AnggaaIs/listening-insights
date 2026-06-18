@@ -9,6 +9,6 @@ echo "Building dist before commit..."
 pnpm build-local
 
 echo "Staging generated release files..."
-git add dist manifest.json package.json package-lock.json README.md CHANGELOG.md preview.png preview2.png
+git add dist manifest.json package.json package-lock.json README.md CHANGELOG.md images/preview1.png images/preview2.png images/preview3.png images/preview4.png
 
 echo "Pre-commit release build OK."

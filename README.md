@@ -2,8 +2,10 @@
 
 A gorgeous, premium dashboard for Spotify Desktop that turns your playback history into beautiful, actionable listening insights. Track your musical habits, monitor streaks, compare periods, back up local data, and see when you listen to music most with interactive heatmap grids.
 
-![Listening Insights Preview](preview.png)
-![Listening Insights Advanced Panels](preview2.png)
+![Listening Insights Overview](images/preview1.png)
+![Listening Insights Patterns](images/preview2.png)
+![Listening Insights Library](images/preview3.png)
+![Listening Insights Data](images/preview4.png)
 
 ## ✨ Features
 
