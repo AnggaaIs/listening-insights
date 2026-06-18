@@ -16,11 +16,12 @@ A gorgeous, premium dashboard for Spotify Desktop that turns your playback histo
   - **Active Time**: Detects which period of the day (Morning, Afternoon, Evening, Night) you listen to music most.
   - **Music Persona**: Dynamic personality mapping based on your busiest playback times.
   - **Streak Tracker**: Tracks your active consecutive listening days and all-time best streaks.
-  - **Skip Rate Analyzer**: Detects how selective you are with an anti-skip filter (fair-play filter that only registers songs played for 20+ seconds).
+- **Skip Rate Analyzer**: Detects how selective you are with an adaptive anti-skip filter (progress-based, 15%–50% of song length — harder to game).
+- **Skip Analytics**: Skip rate by time of day, most skipped tracks, and most skipped artists.
+- **Hourly Genre Breakdown**: Top genre per morning, afternoon, evening, and night.
 - **Top Tracks & Artists**: Beautiful charts displaying your top played tracks and artists with direct playback controls, dynamic cover fetches, and circular avatars.
 - **Track & Artist Trend Arrows**: Shows rank movement, new entries, and play-count deltas compared with the previous period.
 - **Library Trend Charts**: Recharts-powered rank movement charts for top tracks and artists with period-over-period deltas.
-- **Save as Spotify Playlist**: One-click export of your top tracks to a private Spotify playlist from the Library tab.
 - **Monthly Recap**: See this month's plays, top track, top artist, peak hour, and unique songs at a glance.
 - **Listening Goals**: Track active streak, monthly play target, and discovery rate progress.
 - **Genre Insights & Distribution Chart**: Fetches Spotify artist genre metadata to show what styles dominate your listening, plus a Recharts PieChart for visual distribution.
@@ -43,20 +44,28 @@ A gorgeous, premium dashboard for Spotify Desktop that turns your playback histo
 ---
 
 ### Option 2: Manual Installation
-Clone this repository directly into your Spicetify `CustomApps` directory:
+Download the pre-built `dist` branch and extract it into your Spicetify `CustomApps` directory:
 
 #### Windows (PowerShell)
 ```powershell
-cd "$env:APPDATA\spicetify\CustomApps"
-git clone https://github.com/AnggaaIs/spotify-heatmap.git listening-insights
+# Download the latest built release
+Invoke-WebRequest -Uri "https://github.com/AnggaaIs/spotify-heatmap/archive/refs/heads/dist.zip" -OutFile "$env:TEMP\li-dist.zip"
+Expand-Archive -Path "$env:TEMP\li-dist.zip" -DestinationPath "$env:APPDATA\spicetify\CustomApps" -Force
+Remove-Item "$env:TEMP\li-dist.zip"
+# Rename the extracted folder (GitHub names it "spotify-heatmap-dist")
+Rename-Item "$env:APPDATA\spicetify\CustomApps\spotify-heatmap-dist" "listening-insights" -ErrorAction SilentlyContinue
 spicetify config custom_apps listening-insights
 spicetify apply
 ```
 
 #### macOS / Linux (Terminal)
 ```bash
-cd ~/.config/spicetify/CustomApps
-git clone https://github.com/AnggaaIs/spotify-heatmap.git listening-insights
+# Download the latest built release
+curl -L -o /tmp/li-dist.zip https://github.com/AnggaaIs/spotify-heatmap/archive/refs/heads/dist.zip
+unzip -o /tmp/li-dist.zip -d ~/.config/spicetify/CustomApps
+rm /tmp/li-dist.zip
+# Rename the extracted folder (GitHub names it "spotify-heatmap-dist")
+mv ~/.config/spicetify/CustomApps/spotify-heatmap-dist ~/.config/spicetify/CustomApps/listening-insights 2>/dev/null || true
 spicetify config custom_apps listening-insights
 spicetify apply
 ```
