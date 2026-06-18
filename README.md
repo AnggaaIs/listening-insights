@@ -71,11 +71,15 @@ If you want to customize or build the extension from source:
    ```bash
    pnpm install
    ```
-3. Run compiler in development mode:
+3. Install local Git hooks:
+   ```bash
+   pnpm hooks:install
+   ```
+4. Run compiler in development mode:
    ```bash
    pnpm watch
    ```
-4. Build minified files for production:
+5. Build minified files for production:
    ```bash
    pnpm build-local
    ```
