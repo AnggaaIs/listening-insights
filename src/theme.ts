@@ -1,73 +1,13 @@
-export type ThemeName = "green" | "purple" | "orange" | "cyan";
-
-export const THEME_COLORS: Record<ThemeName, {
-  empty: string;
-  1: string;
-  2: string;
-  3: string;
-  4: string;
-  5: string;
-  glow: string;
-  gradientStart: string;
-  gradientEnd: string;
-}> = {
-  green: {
-    empty: "rgba(255,255,255,.06)",
-    1: "#1a3d1a",
-    2: "rgba(29,185,84,.35)",
-    3: "rgba(29,185,84,.6)",
-    4: "#1db954",
-    5: "#3dcc6e",
-    glow: "#1db954",
-    gradientStart: "rgba(29,185,84,0.12)",
-    gradientEnd: "rgba(29,185,84,0.02)",
-  },
-  purple: {
-    empty: "rgba(255,255,255,.06)",
-    1: "#221130",
-    2: "rgba(186,85,211,.3)",
-    3: "rgba(186,85,211,.55)",
-    4: "#ba55d3",
-    5: "#df7bf3",
-    glow: "#ba55d3",
-    gradientStart: "rgba(186,85,211,0.12)",
-    gradientEnd: "rgba(186,85,211,0.02)",
-  },
-  orange: {
-    empty: "rgba(255,255,255,.06)",
-    1: "#301810",
-    2: "rgba(255,127,80,.3)",
-    3: "rgba(255,127,80,.55)",
-    4: "#ff7f50",
-    5: "#ff9f7d",
-    glow: "#ff7f50",
-    gradientStart: "rgba(255,127,80,0.12)",
-    gradientEnd: "rgba(255,127,80,0.02)",
-  },
-  cyan: {
-    empty: "rgba(255,255,255,.06)",
-    1: "#0f2b33",
-    2: "rgba(0,191,255,.3)",
-    3: "rgba(0,191,255,.55)",
-    4: "#00bfff",
-    5: "#4ad2ff",
-    glow: "#00bfff",
-    gradientStart: "rgba(0,191,255,0.12)",
-    gradientEnd: "rgba(0,191,255,0.02)",
-  },
-};
-
-export function generateStyles(theme: ThemeName): string {
-  const c = THEME_COLORS[theme];
+export function generateStyles(): string {
   return `
     :root {
-      --hm-empty: ${c.empty};
-      --hm-1: ${c[1]};
-      --hm-2: ${c[2]};
-      --hm-3: ${c[3]};
-      --hm-4: ${c[4]};
-      --hm-5: ${c[5]};
-      --hm-hover-glow: ${c.glow};
+      --hm-empty: rgba(255,255,255,.06);
+      --hm-1: #1a3d1a;
+      --hm-2: rgba(29,185,84,.35);
+      --hm-3: rgba(29,185,84,.6);
+      --hm-4: #1db954;
+      --hm-5: #3dcc6e;
+      --hm-hover-glow: #1db954;
     }
 
     .hm-cell {

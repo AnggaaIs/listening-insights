@@ -17,37 +17,43 @@ export function TopArtists({ artists, trends = {}, lang }: Props) {
   React.useEffect(() => {
     if (typeof Spicetify === "undefined" || !Spicetify.CosmosAsync) return;
 
-    // Filter artists that haven't been fetched yet
     const artistsToFetch = artists.filter((a) => !fetchedImages[a.name]);
     if (artistsToFetch.length === 0) return;
 
-    artistsToFetch.forEach(async (a) => {
-      try {
-        let url = "";
-        if (a.uri) {
-          const id = a.uri.split(":").pop();
-          if (id) {
-            const res = await Spicetify.CosmosAsync.get(`https://api.spotify.com/v1/artists/${id}`);
-            url = res.images?.[2]?.url ?? res.images?.[0]?.url ?? "";
-          }
-        }
-        
-        // Fallback to search if no uri or image found
-        if (!url) {
-          const searchRes = await Spicetify.CosmosAsync.get(
-            `https://api.spotify.com/v1/search?type=artist&limit=1&q=${encodeURIComponent(a.name)}`
-          );
-          const artistItem = searchRes.artists?.items?.[0];
-          url = artistItem?.images?.[2]?.url ?? artistItem?.images?.[0]?.url ?? "";
-        }
+    let cancelled = false;
 
-        if (url) {
-          setFetchedImages((prev) => ({ ...prev, [a.name]: url }));
+    (async () => {
+      for (const a of artistsToFetch) {
+        if (cancelled) break;
+        await new Promise((r) => setTimeout(r, 250));
+        try {
+          let url = "";
+          if (a.uri) {
+            const id = a.uri.split(":").pop();
+            if (id) {
+              const res = await Spicetify.CosmosAsync.get(`https://api.spotify.com/v1/artists/${id}`);
+              url = res.images?.[2]?.url ?? res.images?.[0]?.url ?? "";
+            }
+          }
+
+          if (!url) {
+            const searchRes = await Spicetify.CosmosAsync.get(
+              `https://api.spotify.com/v1/search?type=artist&limit=1&q=${encodeURIComponent(a.name)}`
+            );
+            const artistItem = searchRes.artists?.items?.[0];
+            url = artistItem?.images?.[2]?.url ?? artistItem?.images?.[0]?.url ?? "";
+          }
+
+          if (url) {
+            setFetchedImages((prev) => ({ ...prev, [a.name]: url }));
+          }
+        } catch (err) {
+          console.error("Failed to fetch artist image for " + a.name, err);
         }
-      } catch (err) {
-        console.error("Failed to fetch artist image for " + a.name, err);
       }
-    });
+    })();
+
+    return () => { cancelled = true; };
   }, [artists]);
 
   if (artists.length === 0) {

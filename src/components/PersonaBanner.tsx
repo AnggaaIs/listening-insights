@@ -1,5 +1,4 @@
 import React from "react";
-import { THEME_COLORS, ThemeName } from "../theme";
 import { TimeOfDay } from "../types/dashboard";
 
 interface Props {
@@ -7,11 +6,14 @@ interface Props {
   peakTime: TimeOfDay;
   currentStreak: number;
   longestStreak: number;
-  theme: ThemeName;
   copy: any;
 }
 
-export function PersonaBanner({ totalPlays, peakTime, currentStreak, longestStreak, theme, copy }: Props) {
+const GRADIENT_START = "rgba(29,185,84,0.12)";
+const GRADIENT_END = "rgba(29,185,84,0.02)";
+const GLOW_COLOR = "#1db954";
+
+export function PersonaBanner({ totalPlays, peakTime, currentStreak, longestStreak, copy }: Props) {
   if (totalPlays <= 0) return null;
   const persona = copy.personas[peakTime];
 
@@ -19,8 +21,8 @@ export function PersonaBanner({ totalPlays, peakTime, currentStreak, longestStre
     <div
       className="li-card li-soft-enter"
       style={{
-        background: `linear-gradient(135deg, ${THEME_COLORS[theme].gradientStart} 0%, ${THEME_COLORS[theme].gradientEnd} 100%)`,
-        border: `1px solid ${THEME_COLORS[theme].glow}30`,
+        background: `linear-gradient(135deg, ${GRADIENT_START} 0%, ${GRADIENT_END} 100%)`,
+        border: `1px solid ${GLOW_COLOR}30`,
         borderRadius: 12,
         padding: "16px 20px",
         marginBottom: 16,

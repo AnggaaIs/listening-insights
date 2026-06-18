@@ -26,16 +26,14 @@ import {
 } from "../utils";
 import {
   PlayEvent,
-  clearSkips,
-  exportBackup,
-  getStorageFootprint,
-  importBackup,
   loadSkips,
 } from "../store";
 import { listeningCoach } from "../analytics/listeningCoach";
+import { skipRateByTimeSegment, mostSkippedArtists, mostSkippedTracks } from "../analytics/skipAnalytics";
 import { ListeningCoachPanel } from "./panels/ListeningCoachPanel";
+import { GenreChart } from "./charts/GenreChart";
 import { advancedCopy } from "./advanced/copy";
-import { buttonStyle, cardStyle, compactCard, formatBytes, sectionTitle, statLine } from "./advanced/ui";
+import { buttonStyle, cardStyle, compactCard, sectionTitle, statLine } from "./advanced/ui";
 
 interface Props {
   history: PlayEvent[];
@@ -86,9 +84,8 @@ function moodLabel(mood: "morning" | "afternoon" | "evening" | "night", lang: "e
 
 export function AdvancedInsights({ history, days, lang, onDataChange }: Props) {
   const t = advancedCopy[lang];
-  const fileRef = React.useRef<HTMLInputElement>(null);
   const [genres, setGenres] = React.useState<GenreStat[]>([]);
-  const [status, setStatus] = React.useState("");
+  const [artistGenreMap, setArtistGenreMap] = React.useState<Record<string, string[]>>({});
   const recap = React.useMemo(() => monthlyRecap(history, lang), [history, lang]);
   const calendar = React.useMemo(() => listeningCalendar(history, days), [history, days]);
   const goals = React.useMemo(() => goalProgress(history, days), [history, days]);
@@ -107,6 +104,28 @@ export function AdvancedInsights({ history, days, lang, onDataChange }: Props) {
   const taste = React.useMemo(() => currentTasteHint(history, days, lang), [history, days, lang]);
   const quality = React.useMemo(() => dataQualityStatus(history, days, lang), [history, days, lang]);
   const sync = React.useMemo(() => syncNotice(history, lang), [history, lang]);
+  const skipRateData = React.useMemo(() => skipRateByTimeSegment(history, skips), [history, skips]);
+  const topSkipped = React.useMemo(() => mostSkippedTracks(history, skips), [history, skips]);
+  const topSkippedArtists = React.useMemo(() => mostSkippedArtists(history, skips), [history, skips]);
+  const hourlyGenres = React.useMemo(() => {
+    const segments: Record<string, Record<string, number>> = { morning: {}, afternoon: {}, evening: {}, night: {} };
+    const cutoff = Date.now() - days * 864e5;
+    for (const event of history) {
+      if (event.ts < cutoff) continue;
+      const genres = artistGenreMap[event.artist];
+      if (!genres || genres.length === 0) continue;
+      const h = new Date(event.ts).getHours();
+      const seg = h >= 6 && h < 12 ? "morning" : h >= 12 && h < 18 ? "afternoon" : h >= 18 && h < 22 ? "evening" : "night";
+      for (const genre of genres) {
+        segments[seg][genre] = (segments[seg][genre] ?? 0) + 1;
+      }
+    }
+    return (["morning", "afternoon", "evening", "night"] as const).map((segment) => {
+      const entries = Object.entries(segments[segment]).sort((a, b) => b[1] - a[1]);
+      const total = entries.reduce((s, [, c]) => s + c, 0);
+      return { segment, topGenre: entries[0]?.[0] ?? null, topCount: entries[0]?.[1] ?? 0, total, pct: total > 0 && entries[0] ? Math.round((entries[0][1] / total) * 100) : 0 };
+    });
+  }, [history, days, artistGenreMap]);
   const maxCalendarPlays = Math.max(...calendar.map((d: CalendarDay) => d.plays), 1);
   const calendarWeeks = React.useMemo(() => {
     if (calendar.length === 0) return [] as Array<Array<CalendarDay | null>>;
@@ -134,21 +153,26 @@ export function AdvancedInsights({ history, days, lang, onDataChange }: Props) {
     let cancelled = false;
     (async () => {
       const counts: Record<string, number> = {};
-      await Promise.all(artists.map(async (artist) => {
+      const map: Record<string, string[]> = {};
+      for (const artist of artists) {
+        if (cancelled) break;
         const id = artist.uri?.split(":").pop();
-        if (!id) return;
+        if (!id) continue;
         try {
           const res = await Spicetify.CosmosAsync.get(`https://api.spotify.com/v1/artists/${id}`);
-          const artistGenres = Array.isArray(res.genres) ? res.genres.slice(0, 4) : [];
-          artistGenres.forEach((genre: string) => {
+          const g = Array.isArray(res.genres) ? res.genres.slice(0, 4) : [];
+          map[artist.name] = g;
+          g.forEach((genre: string) => {
             counts[genre] = (counts[genre] ?? 0) + artist.count;
           });
+          await new Promise((r) => setTimeout(r, 250));
         } catch (err) {
           console.error("Failed to fetch artist genres", err);
         }
-      }));
+      }
       if (!cancelled) {
         setGenres(Object.entries(counts).map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count).slice(0, 8));
+        setArtistGenreMap(map);
       }
     })();
 
@@ -157,48 +181,13 @@ export function AdvancedInsights({ history, days, lang, onDataChange }: Props) {
     };
   }, [history, days]);
 
-  const handleExport = () => {
-    const backup = exportBackup();
-    const blob = new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `listening-insights-backup-${backup.exportedAt.slice(0, 10)}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
-  const handleImport = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    event.target.value = "";
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      try {
-        importBackup(JSON.parse(String(reader.result)));
-        setStatus(t.imported);
-        onDataChange();
-      } catch {
-        setStatus(t.importFailed);
-      }
-    };
-    reader.readAsText(file);
-  };
-
-  const handleClearSkips = () => {
-    clearSkips();
-    setStatus(t.skipsCleared);
-    onDataChange();
-  };
-
   const handleCopyWrapped = async () => {
     const text = [wrapped.title, ...wrapped.lines].join("\n");
     try {
       await navigator.clipboard.writeText(text);
-      setStatus(t.copied);
+      Spicetify?.showNotification?.(t.copied);
     } catch {
-      setStatus(text);
+      Spicetify?.showNotification?.(t.copied);
     }
   };
 
@@ -364,6 +353,15 @@ export function AdvancedInsights({ history, days, lang, onDataChange }: Props) {
         </div>
 
         <div className="li-card" style={cardStyle}>
+          {sectionTitle(t.genreDistribution)}
+          {genres.length > 0 ? (
+            <GenreChart data={genres} max={maxGenre} />
+          ) : (
+            <div style={{ color: "var(--spice-subtext)", fontSize: 12 }}>{t.noGenres}</div>
+          )}
+        </div>
+
+        <div className="li-card" style={cardStyle}>
           {sectionTitle(t.recommendations)}
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {recs.map((rec: Recommendation) => (
@@ -379,29 +377,104 @@ export function AdvancedInsights({ history, days, lang, onDataChange }: Props) {
         </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 300px), 1fr))", gap: 16 }}>
+        <div className="li-card" style={{ ...cardStyle, overflow: "hidden" }}>
+          {sectionTitle(t.skipAnalyticsTitle)}
+          {skipRateData.some((d) => d.skips > 0) ? (
+            <div style={{ display: "grid", gap: 12 }}>
+              <div>
+                <div style={{ fontSize: 11, color: "var(--spice-subtext)", textTransform: "uppercase", fontWeight: 800, letterSpacing: ".4px", marginBottom: 8 }}>{t.skipRateByTime}</div>
+                <div style={{ display: "grid", gap: 8 }}>
+                  {skipRateData.map((d) => (
+                    <div key={d.segment} style={{ minWidth: 0 }}>
+                      <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) auto", alignItems: "center", gap: 8, fontSize: 11, marginBottom: 3, minWidth: 0 }}>
+                        <span style={{ color: "var(--spice-text)", fontWeight: 700, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t.moodShort[d.segment]}</span>
+                        <span style={{ color: "var(--spice-subtext)", whiteSpace: "nowrap", justifySelf: "end", maxWidth: "100%" }}>{d.skips}/{d.plays} ({d.skipRate}%)</span>
+                      </div>
+                      <div style={{ height: 6, borderRadius: 4, background: "rgba(255,255,255,.06)", overflow: "hidden" }}>
+                        <div className="li-bar-fill" style={{ height: "100%", width: `${d.skipRate}%`, background: d.skipRate > 30 ? "rgba(255,80,80,.7)" : "var(--spice-button)" }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              {topSkipped.length > 0 && (
+                <div>
+                  <div style={{ fontSize: 11, color: "var(--spice-subtext)", textTransform: "uppercase", fontWeight: 800, letterSpacing: ".4px", marginBottom: 8 }}>{t.mostSkippedTracks}</div>
+                  <div style={{ display: "grid", gap: 6 }}>
+                    {topSkipped.slice(0, 4).map((track) => (
+                      <div key={track.uri} style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) auto", alignItems: "center", gap: 12, minWidth: 0 }}>
+                        <span style={{ color: "var(--spice-text)", fontSize: 12, fontWeight: 700, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{track.name}</span>
+                        <span style={{ color: "var(--spice-subtext)", fontSize: 11, justifySelf: "end" }}>{track.skipCount}x</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {topSkippedArtists.length > 0 && (
+                <div>
+                  <div style={{ fontSize: 11, color: "var(--spice-subtext)", textTransform: "uppercase", fontWeight: 800, letterSpacing: ".4px", marginBottom: 8 }}>{t.mostSkippedArtists}</div>
+                  <div style={{ display: "grid", gap: 6 }}>
+                    {topSkippedArtists.map((artist) => (
+                      <div key={artist.name} style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) auto", alignItems: "center", gap: 12, minWidth: 0 }}>
+                        <span style={{ color: "var(--spice-text)", fontSize: 12, fontWeight: 700, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{artist.name}</span>
+                        <span style={{ color: "var(--spice-subtext)", fontSize: 11, justifySelf: "end" }}>{artist.skipCount}x</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div style={{ color: "var(--spice-subtext)", fontSize: 12 }}>{t.noSkipData}</div>
+          )}
+        </div>
+
         <div className="li-card" style={cardStyle}>
+          {sectionTitle(t.hourlyGenreTitle)}
+          {hourlyGenres.some((h) => h.topGenre) ? (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12 }}>
+              {hourlyGenres.map((h) => (
+                <div key={h.segment} style={{ padding: 10, borderRadius: 8, background: "rgba(255,255,255,.04)" }}>
+                  <div style={{ fontSize: 10, color: "var(--spice-subtext)", textTransform: "uppercase", fontWeight: 800, letterSpacing: ".4px", marginBottom: 4 }}>{t.moodShort[h.segment]}</div>
+                  <div style={{ fontSize: 18, fontWeight: 900, color: "var(--spice-text)", lineHeight: "20px", textTransform: "capitalize", marginBottom: 4 }}>
+                    {h.topGenre ?? "-"}
+                  </div>
+                  <div style={{ fontSize: 11, color: "var(--spice-button)" }}>
+                    {h.pct > 0 ? `${h.pct}%` : "-"}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div style={{ color: "var(--spice-subtext)", fontSize: 12 }}>{t.noHourlyGenreData}</div>
+          )}
+        </div>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(0, max-content)", gap: 16 }}>
+        <div className="li-card" style={{ ...cardStyle, width: "fit-content", maxWidth: "100%", overflowX: "auto" }}>
           {sectionTitle(t.calendar)}
-          <div style={{ display: "flex", gap: 10, alignItems: "flex-start", overflowX: "auto", paddingBottom: 2 }}>
-            <div style={{ display: "grid", gridTemplateRows: "repeat(7, 13px)", gap: 4, paddingTop: 1, color: "var(--spice-subtext)", fontSize: 10, flexShrink: 0 }}>
+          <div style={{ display: "inline-flex", gap: 10, alignItems: "flex-start", paddingBottom: 2, minWidth: 0 }}>
+            <div style={{ display: "grid", gridTemplateRows: "repeat(7, 22px)", gap: 4, color: "var(--spice-subtext)", fontSize: 10, flexShrink: 0 }}>
               {(lang === "id" ? ["Min", "", "Sel", "", "Kam", "", "Sab"] : ["Sun", "", "Tue", "", "Thu", "", "Sat"]).map((label, idx) => (
-                <div key={`${label}-${idx}`} style={{ height: 13, lineHeight: "13px" }}>{label}</div>
+                <div key={`${label}-${idx}`} style={{ height: 22, lineHeight: "22px" }}>{label}</div>
               ))}
             </div>
             <div style={{ display: "flex", gap: 4, minWidth: 0 }}>
               {calendarWeeks.map((week, weekIdx) => (
-                <div key={weekIdx} style={{ display: "grid", gridTemplateRows: "repeat(7, 13px)", gap: 4 }}>
+                <div key={weekIdx} style={{ display: "grid", gridTemplateRows: "repeat(7, 22px)", gap: 4 }}>
                   {week.map((day, dayIdx) => (
                     <div
                       className="li-soft-enter"
                       key={day?.key ?? `${weekIdx}-${dayIdx}`}
                       title={day ? `${day.label}: ${day.plays} ${t.plays}` : ""}
                       style={{
-                        width: 13,
-                        height: 13,
-                        borderRadius: 3,
+                        width: 22,
+                        height: 22,
+                        borderRadius: 4,
                         background: day ? calendarColor(day.plays, maxCalendarPlays) : "transparent",
-                        border: day?.isToday ? "1px solid var(--spice-button)" : "1px solid rgba(255,255,255,0.04)",
+                        border: day?.isToday ? "2px solid var(--spice-button)" : "1px solid rgba(255,255,255,0.04)",
                         boxSizing: "border-box",
                         flexShrink: 0,
                       }}
@@ -410,7 +483,7 @@ export function AdvancedInsights({ history, days, lang, onDataChange }: Props) {
                 </div>
               ))}
             </div>
-            <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 5, color: "var(--spice-subtext)", fontSize: 10, flexShrink: 0 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 5, color: "var(--spice-subtext)", fontSize: 10, flexShrink: 0, paddingTop: 1 }}>
               <span>0</span>
               {[1, 2, 3, 4, 5].map((level) => (
                 <span
@@ -429,21 +502,6 @@ export function AdvancedInsights({ history, days, lang, onDataChange }: Props) {
           </div>
         </div>
 
-        <div className="li-card" style={cardStyle}>
-          {sectionTitle(t.dataManager)}
-          <input ref={fileRef} type="file" accept="application/json" onChange={handleImport} style={{ display: "none" }} />
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 10 }}>
-            <button className="li-action-button" style={buttonStyle} onClick={handleExport}>{t.exportData}</button>
-            <button className="li-action-button" style={buttonStyle} onClick={() => fileRef.current?.click()}>{t.importData}</button>
-            <button className="li-action-button" style={buttonStyle} onClick={handleClearSkips}>{t.clearSkips}</button>
-          </div>
-          <div style={{ display: "flex", gap: 14, flexWrap: "wrap", color: "var(--spice-subtext)", fontSize: 12 }}>
-            <span>{history.length} {t.events}</span>
-            <span>{skips.length} {t.skips}</span>
-            <span>{formatBytes(getStorageFootprint())} {t.storage}</span>
-            {status && <span style={{ color: "var(--spice-button)", fontWeight: 700 }}>{status}</span>}
-          </div>
-        </div>
       </div>
     </div>
   );

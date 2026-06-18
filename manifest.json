@@ -1,6 +1,6 @@
 {
   "name": "Listening Insights",
-  "description": "Beautiful Spotify listening dashboard with heatmaps, streaks, goals, recaps, recommendations, backups, and advanced taste insights.",
+  "description": "Beautiful Spotify listening dashboard with heatmaps, streaks, goals, recaps, genre charts, playlist export, and advanced taste insights.",
   "preview": "preview.png",
   "main": "dist/index.js",
   "readme": "README.md",

@@ -18,24 +18,31 @@ export function TopTracks({ tracks, trends = {}, lang }: Props) {
 
   React.useEffect(() => {
     if (typeof Spicetify === "undefined" || !Spicetify.CosmosAsync) return;
-    
-    // Only fetch for tracks that don't already have an imageUrl and aren't fetched yet
+
     const tracksToFetch = tracks.filter((t) => !t.imageUrl && !fetchedImages[t.uri]);
     if (tracksToFetch.length === 0) return;
 
-    tracksToFetch.forEach(async (t) => {
-      try {
-        const id = t.uri.split(":").pop();
-        if (!id) return;
-        const res = await Spicetify.CosmosAsync.get(`https://api.spotify.com/v1/tracks/${id}`);
-        const url = res.album?.images?.[2]?.url ?? res.album?.images?.[0]?.url;
-        if (url) {
-          setFetchedImages((prev) => ({ ...prev, [t.uri]: url }));
+    let cancelled = false;
+
+    (async () => {
+      for (const t of tracksToFetch) {
+        if (cancelled) break;
+        await new Promise((r) => setTimeout(r, 250));
+        try {
+          const id = t.uri.split(":").pop();
+          if (!id) continue;
+          const res = await Spicetify.CosmosAsync.get(`https://api.spotify.com/v1/tracks/${id}`);
+          const url = res.album?.images?.[2]?.url ?? res.album?.images?.[0]?.url;
+          if (url) {
+            setFetchedImages((prev) => ({ ...prev, [t.uri]: url }));
+          }
+        } catch (err) {
+          console.error("Failed to fetch track image for " + t.uri, err);
         }
-      } catch (err) {
-        console.error("Failed to fetch track image for " + t.uri, err);
       }
-    });
+    })();
+
+    return () => { cancelled = true; };
   }, [tracks]);
 
   if (tracks.length === 0) {

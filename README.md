@@ -18,9 +18,10 @@ A gorgeous, premium dashboard for Spotify Desktop that turns your playback histo
 - **Top Tracks & Artists**: Beautiful charts displaying your top played tracks and artists with direct playback controls, dynamic cover fetches, and circular avatars.
 - **Track & Artist Trend Arrows**: Shows rank movement, new entries, and play-count deltas compared with the previous period.
 - **Library Trend Charts**: Recharts-powered rank movement charts for top tracks and artists with period-over-period deltas.
+- **Save as Spotify Playlist**: One-click export of your top tracks to a private Spotify playlist from the Library tab.
 - **Monthly Recap**: See this month's plays, top track, top artist, peak hour, and unique songs at a glance.
 - **Listening Goals**: Track active streak, monthly play target, and discovery rate progress.
-- **Genre Insights**: Fetches Spotify artist genre metadata to show what styles dominate your listening.
+- **Genre Insights & Distribution Chart**: Fetches Spotify artist genre metadata to show what styles dominate your listening, plus a Recharts PieChart for visual distribution.
 - **Listening Heatmap**: Daily contribution-style heatmap for the selected period, making active and quiet days easy to spot.
 - **Smart Recommendations**: Suggests Spotify searches based on your peak listening time, top artists, and discovery habits.
 - **Advanced Taste Signals**: Listening score, best listening day, repeat addiction, artist loyalty, session detection, skip hotspots, period comparison, active-time trend, mini wrapped, listening coach, and current taste hints.
@@ -93,6 +94,7 @@ Package/app id: `listening-insights`.
 - `src/components/HeatmapPage.tsx`: small dashboard orchestrator.
 - `src/hooks/useListeningDashboard.ts`: local dashboard state and refresh lifecycle.
 - `src/components/tabs/`: tab-level UI sections.
+- `src/components/charts/`: Recharts-based chart components (library trends, genre distribution).
 - `src/components/panels/`: reusable analytics panels.
 - `src/components/advanced/`: advanced insight copy and shared UI helpers.
 - `src/analytics/`: higher-value analytics modules such as Listening Coach.
