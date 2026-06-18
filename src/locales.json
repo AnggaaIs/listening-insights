@@ -33,10 +33,8 @@
     "highlySelective": "Highly selective listener (often skip).",
     "weekdayVsWeekend": "Weekday vs Weekend",
     "weekdayWeekendDesc": "{weekday}% weekdays / {weekend}% weekends",
-    "recentVibe": "Recent Vibe",
     "weeklyActivityTitle": "Weekly Activity Distribution",
     "dailyTimeTitle": "Daily Time Distribution",
-    "typicalVibe": "Typical Vibe",
     "warningTitle": "Spotify Connect Sync",
     "warningDesc": "Since this app is a local Spicetify extension, it only tracks songs while the Spotify Desktop app is open on this computer. If you listen to music on your phone, it WILL be tracked as long as Spotify Desktop is running (via Spotify Connect sync). Plays that happen when Spotify Desktop is closed cannot be recorded.",
     "antiSkipTitle": "Anti-Skip Filter (Fair Play)",
@@ -51,10 +49,18 @@
     "topArtistsTitle": "Top artists this period",
     "noDataTitle": "No data yet — listen to some music first!",
     "noDataDesc": "Play some music, and data will appear automatically.",
-    "currentVibeLabel": "Current Vibe",
+    "tabs": {
+      "overview": "Overview",
+      "patterns": "Patterns",
+      "library": "Library",
+      "data": "Data"
+    },
     "activityTitle": "Activity by hour & day",
     "legendFew": "Few",
     "legendMany": "Many",
+    "rangeDayShort": "d",
+    "tooltipPlaySingular": "play",
+    "tooltipPlayPlural": "plays",
     "timeLabels": {
       "morning": "Morning",
       "afternoon": "Afternoon",
@@ -73,32 +79,153 @@
       "evening": { "title": "Sunset Lover", "desc": "You wind down your day with soothing vibes." },
       "night": { "title": "Night Owl", "desc": "The night is young, and so is your playlist." }
     },
-    "vibes": {
-      "gloomy": {
-        "name": "Gloomy / Melancholy",
-        "desc": "Slow, emotional tracks dominate. Perfect for deep thoughts or nostalgic moments."
-      },
-      "soulful": {
-        "name": "Acoustic / Soulful",
-        "desc": "Heavy acoustic and gentle tracks. Sounds intimate and deeply comforting."
-      },
-      "chill": {
-        "name": "Chill / Relaxed",
-        "desc": "Smooth, low-intensity tunes are keeping you calm. Perfect for studying or unwinding."
-      },
-      "cheerful": {
-        "name": "Energetic & Cheerful",
-        "desc": "Up-beat, high-energy tracks are boosting your vibe. Perfect for active tasks."
-      },
-      "intense": {
-        "name": "Intense & Heavy",
-        "desc": "High energy with darker, heavier tones. Great for raw focus and adrenaline."
-      },
-      "balanced": {
-        "name": "Balanced / Diverse",
-        "desc": "A balanced mix of different feelings and vibes. Adaptive to any situation."
+    "rankCharts": {
+      "trackTitle": "Track Rank Movement",
+      "artistTitle": "Artist Rank Movement",
+      "previous": "Prev",
+      "current": "Now",
+      "needsPrevious": "Needs previous period data first.",
+      "noMovement": "No visible rank movement yet.",
+      "sameRank": "same rank",
+      "up": "up",
+      "down": "down",
+      "plays": "plays"
+    },
+    "trendBadge": {
+      "newEntry": "New in this period",
+      "rankChange": "Rank change",
+      "playChange": "Play change"
+    },
+    "share": {
+      "mins": "mins",
+      "hrs": "hrs",
+      "persona": "My Music Persona",
+      "dayStreak": "Day Streak!",
+      "plays": "Plays",
+      "listenTime": "Listen Time",
+      "topTrack": "Top Track",
+      "topArtist": "Top Artist",
+      "poweredBy": "POWERED BY SPICETIFY",
+      "screenshotHint": "Take a screenshot (Win + Shift + S) to share!",
+      "close": "Close"
+    },
+    "listeningCoach": {
+      "title": "Listening Coach",
+      "lowSample": "Low sample",
+      "lowSampleValue": "Insights improve after a few more sessions.",
+      "activityShift": "Activity shift",
+      "activityUp": "Up",
+      "activityDown": "Down",
+      "vsPreviousPeriod": "vs previous period.",
+      "highRepeat": "High repeat",
+      "highRepeatValue": "{track} takes {pct}% of this period's plays.",
+      "artistLoyalty": "Artist loyalty",
+      "artistLoyaltyValue": "{artist} dominates {pct}% of your listening.",
+      "skipHotspot": "Skip hotspot",
+      "skipHotspotValue": "Skips cluster around {label}.",
+      "lowDiscovery": "Low discovery",
+      "lowDiscoveryValue": "Mix in new tracks so the dashboard does not stagnate.",
+      "stablePattern": "Stable pattern",
+      "stablePatternValue": "No major anomaly in this period.",
+      "summary": "Score {score}/100. Main focus: {focus}.",
+      "actionLabel": "Find next action"
+    },
+    "advanced": {
+      "monthlyRecap": "Monthly Recap",
+      "plays": "plays",
+      "unique": "unique",
+      "topTrack": "Top track",
+      "topArtist": "Top artist",
+      "peakHour": "Peak hour",
+      "goals": "Goals",
+      "genreInsights": "Genre Insights",
+      "noGenres": "Genre data appears after Spotify returns artist metadata.",
+      "calendar": "Listening Heatmap",
+      "recommendations": "Smart Recommendations",
+      "openSearch": "Search",
+      "dataManager": "Data Manager",
+      "exportData": "Export backup",
+      "importData": "Import backup",
+      "clearSkips": "Clear skips",
+      "events": "events",
+      "skips": "skips",
+      "storage": "storage",
+      "imported": "Backup imported",
+      "importFailed": "Invalid backup file",
+      "skipsCleared": "Skips cleared",
+      "noData": "No data yet",
+      "activeStreak": "Active streak",
+      "monthlyPlays": "Monthly plays",
+      "discoveryRate": "Discovery rate",
+      "daysUnit": "days",
+      "listeningScore": "Listening Score",
+      "bestDay": "Best Day",
+      "repeatAddiction": "Repeat Addiction",
+      "artistLoyalty": "Artist Loyalty",
+      "sessions": "Sessions",
+      "skipHotspot": "Skip Hotspot",
+      "compareMode": "Compare Mode",
+      "moodTimeline": "Active Time Trend",
+      "miniWrapped": "Mini Wrapped",
+      "tasteHint": "Taste Hint",
+      "longest": "longest",
+      "startsAt": "starts at",
+      "vsPrev": "vs previous",
+      "copyText": "Copy",
+      "copied": "Copied",
+      "dataQuality": "Data Quality",
+      "syncStatus": "Sync Status",
+      "samples": "samples",
+      "activeDaysShort": "active days",
+      "lastTracked": "last tracked",
+      "consistency": "Consistency",
+      "diversity": "Diversity",
+      "streak": "Streak",
+      "skipHealth": "Skip health",
+      "tasteHintDesc": "Hint from active hours and dominant artist.",
+      "moodShort": {
+        "morning": "Morning",
+        "afternoon": "Day",
+        "evening": "Evening",
+        "night": "Late"
       }
-    }
+    },
+    "analyticsCopy": {
+      "dailyMixTitle": "Start with Daily Mix",
+      "dailyMixDesc": "Not enough data yet. Play more songs first.",
+      "activeHoursTitle": "Fits your active hours",
+      "activeHoursDesc": "Search playlists that match your {peak} pattern.",
+      "favoriteArtistTitle": "More from your favorite artist",
+      "favoriteArtistDesc": "Find tracks similar to {artist}.",
+      "favoriteArtistFallback": "Search around your top artist.",
+      "boostDiscoveryTitle": "Boost discovery",
+      "boostDiscoveryDesc": "Add new tracks to raise diversity.",
+      "miniWrappedTitle": "{days}d Mini Wrapped",
+      "miniWrappedScore": "Score {score}/100",
+      "miniWrappedTrack": "Track: {track}",
+      "miniWrappedArtist": "Artist: {artist}",
+      "miniWrappedBestDay": "Best day: {label} ({plays}x)",
+      "tasteTitle": "Current taste mode",
+      "tasteArtistSuffix": " shaped by {artist}",
+      "tasteModes": {
+        "morning": "morning lift",
+        "afternoon": "daytime focus",
+        "evening": "evening wind-down",
+        "night": "late-night mode"
+      },
+      "dataQuality": {
+        "good": "Enough data for reliable period insights.",
+        "medium": "Insights are usable, but more data will improve accuracy.",
+        "low": "Low sample size. Insights may change quickly."
+      },
+      "sync": {
+        "empty": "No tracked plays yet. Spotify Desktop must be open for tracking to run.",
+        "active": "Tracking looks recently active.",
+        "recentGap": "No plays tracked in the last several hours. Keep Spotify Desktop open.",
+        "longGap": "Long tracking gap. Plays while Desktop is closed cannot be recorded."
+      }
+    },
+    "tabHint": "Choose a section to keep the dashboard focused."
   },
   "id": {
     "appName": "Listening Insights",
@@ -134,10 +261,8 @@
     "highlySelective": "Sangat selektif (sering skip).",
     "weekdayVsWeekend": "Kerja vs Akhir Pekan",
     "weekdayWeekendDesc": "{weekday}% hari kerja / {weekend}% akhir pekan",
-    "recentVibe": "Vibe Terbaru",
     "weeklyActivityTitle": "Distribusi Aktivitas Mingguan",
     "dailyTimeTitle": "Distribusi Waktu Harian",
-    "typicalVibe": "Mood Dominan",
     "warningTitle": "Sinkronisasi Spotify Connect",
     "warningDesc": "Karena aplikasi ini adalah ekstensi lokal Spicetify, data lagu hanya tercatat jika Spotify Desktop di PC ini sedang aktif berjalan. Jika lo memutar lagu di HP, pemutaran TETAP ter-track selama Spotify Desktop di PC dalam keadaan terbuka (melalui sinkronisasi Spotify Connect). Lagu yang diputar saat Spotify Desktop ditutup tidak bisa terekam.",
     "antiSkipTitle": "Proteksi Anti-Skip (Lebih Adil)",
@@ -152,10 +277,18 @@
     "topArtistsTitle": "Artis teratas periode ini",
     "noDataTitle": "Belum ada data — yuk dengerin musik dulu!",
     "noDataDesc": "Dengerin musik dulu, data bakal muncul otomatis.",
-    "currentVibeLabel": "Vibe Saat Ini",
+    "tabs": {
+      "overview": "Ringkasan",
+      "patterns": "Pola",
+      "library": "Koleksi",
+      "data": "Data"
+    },
     "activityTitle": "Aktivitas per jam & hari",
     "legendFew": "Jarang",
     "legendMany": "Sering",
+    "rangeDayShort": " hari",
+    "tooltipPlaySingular": "kali putar",
+    "tooltipPlayPlural": "kali putar",
     "timeLabels": {
       "morning": "Pagi",
       "afternoon": "Siang/Sore",
@@ -174,31 +307,152 @@
       "evening": { "title": "Sunset Lover", "desc": "Lo menutup hari dengan alunan yang santai." },
       "night": { "title": "Burung Hantu", "desc": "Malam masih muda, playlist lo juga masih asyik." }
     },
-    "vibes": {
-      "gloomy": {
-        "name": "Galau / Sendu",
-        "desc": "Lagu-lagu sendu mendominasi. Cocok buat nemenin ngelamun atau bernostalgia."
-      },
-      "soulful": {
-        "name": "Syahdu / Intim",
-        "desc": "Didominasi alunan akustik dan vokal hangat. Terasa intim dan menenangkan jiwa."
-      },
-      "chill": {
-        "name": "Santai / Rileks",
-        "desc": "Lagu dengan tempo sedang dan vibes adem. Enak buat nemenin belajar atau santai."
-      },
-      "cheerful": {
-        "name": "Ceria / Bersemangat",
-        "desc": "Banyak lagu up-beat dan ceria. Bikin mood naik dan pengen ikutan joget!"
-      },
-      "intense": {
-        "name": "Intens / Keras",
-        "desc": "Lagu berenergi tinggi dengan nuansa gelap atau cadas. Cocok buat naikin adrenalin."
-      },
-      "balanced": {
-        "name": "Dinamis / Berwarna",
-        "desc": "Perpaduan berbagai mood yang seimbang. Menyesuaikan segala situasi."
+    "rankCharts": {
+      "trackTitle": "Pergerakan Rank Lagu",
+      "artistTitle": "Pergerakan Rank Artis",
+      "previous": "Sebelum",
+      "current": "Kini",
+      "needsPrevious": "Butuh data periode sebelumnya dulu.",
+      "noMovement": "Belum ada perubahan rank yang cukup terlihat.",
+      "sameRank": "rank sama",
+      "up": "naik",
+      "down": "turun",
+      "plays": "putar"
+    },
+    "trendBadge": {
+      "newEntry": "Baru di periode ini",
+      "rankChange": "Perubahan rank",
+      "playChange": "Perubahan putar"
+    },
+    "share": {
+      "mins": "mnt",
+      "hrs": "jam",
+      "persona": "Karakter Musikmu",
+      "dayStreak": "Hari Beruntun!",
+      "plays": "Putar",
+      "listenTime": "Waktu Dengar",
+      "topTrack": "Lagu Teratas",
+      "topArtist": "Artis Teratas",
+      "poweredBy": "DIHITUNG OLEH SPICETIFY",
+      "screenshotHint": "Ambil screenshot (Win + Shift + S) untuk membagikan!",
+      "close": "Tutup"
+    },
+    "listeningCoach": {
+      "title": "Listening Coach",
+      "lowSample": "Sampel rendah",
+      "lowSampleValue": "Insight akan makin akurat setelah beberapa sesi lagi.",
+      "activityShift": "Perubahan aktivitas",
+      "activityUp": "Naik",
+      "activityDown": "Turun",
+      "vsPreviousPeriod": "vs periode sebelumnya.",
+      "highRepeat": "Repeat tinggi",
+      "highRepeatValue": "{track} mengambil {pct}% dari play periode ini.",
+      "artistLoyalty": "Loyalitas artis",
+      "artistLoyaltyValue": "{artist} mendominasi {pct}% listening kamu.",
+      "skipHotspot": "Hotspot skip",
+      "skipHotspotValue": "Skip paling sering di {label}.",
+      "lowDiscovery": "Eksplorasi rendah",
+      "lowDiscoveryValue": "Coba campur lagu baru agar dashboard tidak stagnan.",
+      "stablePattern": "Pola stabil",
+      "stablePatternValue": "Tidak ada anomali besar di periode ini.",
+      "summary": "Skor {score}/100. Fokus utama: {focus}.",
+      "actionLabel": "Cari aksi cocok"
+    },
+    "advanced": {
+      "monthlyRecap": "Rekap Bulanan",
+      "plays": "putar",
+      "unique": "unik",
+      "topTrack": "Lagu top",
+      "topArtist": "Artis top",
+      "peakHour": "Jam ramai",
+      "goals": "Target",
+      "genreInsights": "Insight Genre",
+      "noGenres": "Data genre muncul setelah Spotify mengirim metadata artis.",
+      "calendar": "Heatmap Dengar",
+      "recommendations": "Rekomendasi Pintar",
+      "openSearch": "Cari",
+      "dataManager": "Manajer Data",
+      "exportData": "Export backup",
+      "importData": "Import backup",
+      "clearSkips": "Hapus skip",
+      "events": "event",
+      "skips": "skip",
+      "storage": "storage",
+      "imported": "Backup berhasil di-import",
+      "importFailed": "File backup tidak valid",
+      "skipsCleared": "Data skip dihapus",
+      "noData": "Belum ada data",
+      "activeStreak": "Streak aktif",
+      "monthlyPlays": "Putar bulanan",
+      "discoveryRate": "Rasio eksplorasi",
+      "daysUnit": "hari",
+      "listeningScore": "Skor Dengar",
+      "bestDay": "Hari Terbaik",
+      "repeatAddiction": "Repeat Addiction",
+      "artistLoyalty": "Loyalitas Artis",
+      "sessions": "Sesi Dengar",
+      "skipHotspot": "Hotspot Skip",
+      "compareMode": "Mode Banding",
+      "moodTimeline": "Tren Waktu Aktif",
+      "miniWrapped": "Mini Wrapped",
+      "tasteHint": "Taste Hint",
+      "longest": "terpanjang",
+      "startsAt": "mulai jam",
+      "vsPrev": "vs sebelumnya",
+      "copyText": "Copy",
+      "copied": "Copied",
+      "dataQuality": "Kualitas Data",
+      "syncStatus": "Status Sync",
+      "samples": "sample",
+      "activeDaysShort": "hari aktif",
+      "lastTracked": "terakhir tercatat",
+      "consistency": "Konsistensi",
+      "diversity": "Keberagaman",
+      "streak": "Streak",
+      "skipHealth": "Kesehatan skip",
+      "tasteHintDesc": "Hint dari jam aktif dan artis dominan.",
+      "moodShort": {
+        "morning": "Pagi",
+        "afternoon": "Siang",
+        "evening": "Malam",
+        "night": "Dini"
       }
-    }
+    },
+    "analyticsCopy": {
+      "dailyMixTitle": "Mulai dari Daily Mix",
+      "dailyMixDesc": "Data belum cukup. Putar beberapa lagu dulu.",
+      "activeHoursTitle": "Cocok buat jam aktifmu",
+      "activeHoursDesc": "Cari playlist untuk pola {peak}.",
+      "favoriteArtistTitle": "Lanjut dari artis favorit",
+      "favoriteArtistDesc": "Temukan lagu mirip {artist}.",
+      "favoriteArtistFallback": "Cari lagu mirip artis top kamu.",
+      "boostDiscoveryTitle": "Naikkan eksplorasi",
+      "boostDiscoveryDesc": "Campur lagu baru agar diversity naik.",
+      "miniWrappedTitle": "Wrapped Mini {days} Hari",
+      "miniWrappedScore": "Score {score}/100",
+      "miniWrappedTrack": "Lagu: {track}",
+      "miniWrappedArtist": "Artis: {artist}",
+      "miniWrappedBestDay": "Hari terbaik: {label} ({plays}x)",
+      "tasteTitle": "Mode sekarang",
+      "tasteArtistSuffix": " dengan warna {artist}",
+      "tasteModes": {
+        "morning": "pagi ringan",
+        "afternoon": "fokus siang",
+        "evening": "senja santai",
+        "night": "malam intens"
+      },
+      "dataQuality": {
+        "good": "Data cukup kuat untuk insight periode ini.",
+        "medium": "Insight cukup oke, tapi makin akurat kalau data bertambah.",
+        "low": "Data masih sedikit. Insight bisa berubah cepat."
+      },
+      "sync": {
+        "empty": "Belum ada lagu yang tercatat. Spotify Desktop harus terbuka agar tracking berjalan.",
+        "active": "Tracking terlihat aktif baru-baru ini.",
+        "recentGap": "Tidak ada play tercatat beberapa jam terakhir. Pastikan Spotify Desktop tetap terbuka.",
+        "longGap": "Gap tracking cukup lama. Plays saat Desktop tertutup tidak bisa direkam."
+      }
+    },
+    "tabHint": "Pilih bagian agar dashboard tetap fokus."
   }
 }

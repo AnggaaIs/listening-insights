@@ -160,6 +160,7 @@ export function StatsRow({
     >
       {stats.map((s) => (
         <div
+          className="li-card"
           key={s.label}
           style={{
             background: "var(--spice-card)",
@@ -216,6 +217,7 @@ export function StatsRow({
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              transition: "opacity 160ms ease, transform 160ms ease",
             }}
           >
             {s.icon}

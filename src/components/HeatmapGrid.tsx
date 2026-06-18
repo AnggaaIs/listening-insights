@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import { DOW_LABELS, DOW_LABELS_ID, cellColor, fmtHour, matrixMax } from "../utils";
+import locales from "../locales.json";
 
 interface Tooltip {
   text: string;
@@ -18,6 +19,7 @@ export function HeatmapGrid({ matrix, days, onRangeChange, lang }: Props) {
   const [tooltip, setTooltip] = useState<Tooltip | null>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const max = matrixMax(matrix);
+  const copy = locales[lang];
 
   function handleEnter(e: React.MouseEvent, hour: number, dow: number) {
     const val = matrix[hour]?.[dow] ?? 0;
@@ -26,7 +28,7 @@ export function HeatmapGrid({ matrix, days, onRangeChange, lang }: Props) {
     if (!parent) return;
 
     const dayName = (lang === "en" ? DOW_LABELS : DOW_LABELS_ID)[dow];
-    const playSuffix = lang === "en" ? `play${val !== 1 ? "s" : ""}` : "kali putar";
+    const playSuffix = val === 1 ? copy.tooltipPlaySingular : copy.tooltipPlayPlural;
 
     setTooltip({
       text: `${dayName} ${fmtHour(hour)} — ${val} ${playSuffix}`,
@@ -37,6 +39,7 @@ export function HeatmapGrid({ matrix, days, onRangeChange, lang }: Props) {
 
   return (
     <div
+      className="li-card"
       style={{
         background: "var(--spice-card)",
         borderRadius: 10,
@@ -57,11 +60,12 @@ export function HeatmapGrid({ matrix, days, onRangeChange, lang }: Props) {
         <span
           style={{ fontSize: 14, fontWeight: 600, color: "var(--spice-text)" }}
         >
-          {lang === "en" ? "Activity by hour & day" : "Aktivitas per jam & hari"}
+          {copy.activityTitle}
         </span>
         <div style={{ display: "flex", gap: 4 }}>
           {([7, 30, 90] as const).map((r) => (
             <div
+              className="li-action-button"
               key={r}
               onClick={() => onRangeChange(r)}
               style={{
@@ -77,7 +81,7 @@ export function HeatmapGrid({ matrix, days, onRangeChange, lang }: Props) {
                 userSelect: "none",
               }}
             >
-              {r}{lang === "en" ? "d" : " hari"}
+              {r}{copy.rangeDayShort}
             </div>
           ))}
         </div>
@@ -199,7 +203,7 @@ export function HeatmapGrid({ matrix, days, onRangeChange, lang }: Props) {
         }}
       >
         <span style={{ fontSize: 10, color: "var(--spice-subtext)" }}>
-          {lang === "en" ? "Few" : "Jarang"}
+          {copy.legendFew}
         </span>
         {[
           "var(--hm-1)",
@@ -214,7 +218,7 @@ export function HeatmapGrid({ matrix, days, onRangeChange, lang }: Props) {
           />
         ))}
         <span style={{ fontSize: 10, color: "var(--spice-subtext)" }}>
-          {lang === "en" ? "Many" : "Sering"}
+          {copy.legendMany}
         </span>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import React from "react";
 import { TrackStat, ArtistStat } from "../utils";
+import locales from "../locales.json";
 
 interface Props {
   isOpen: boolean;
@@ -35,6 +36,18 @@ export function ShareModal({
 }: Props) {
   const [trackImg, setTrackImg] = React.useState("");
   const [artistImg, setArtistImg] = React.useState("");
+  const [animate, setAnimate] = React.useState(false);
+  const copy = locales[lang].share;
+
+  React.useEffect(() => {
+    if (!isOpen) {
+      setAnimate(false);
+      return;
+    }
+
+    const id = setTimeout(() => setAnimate(true), 10);
+    return () => clearTimeout(id);
+  }, [isOpen]);
 
   React.useEffect(() => {
     if (!isOpen || typeof Spicetify === "undefined" || !Spicetify.CosmosAsync) return;
@@ -93,8 +106,8 @@ export function ShareModal({
   // Format estimated time
   const hrs = (listeningTimeMin / 60).toFixed(1);
   const timeStr = listeningTimeMin < 60 
-    ? `${listeningTimeMin} ${lang === "en" ? "mins" : "mnt"}`
-    : `${hrs} ${lang === "en" ? "hrs" : "jam"}`;
+    ? `${listeningTimeMin} ${copy.mins}`
+    : `${hrs} ${copy.hrs}`;
 
   return Spicetify.ReactDOM.createPortal(
     <div
@@ -110,6 +123,8 @@ export function ShareModal({
         justifyContent: "center",
         zIndex: 9999,
         backdropFilter: "blur(6px)",
+        opacity: animate ? 1 : 0,
+        transition: "opacity 180ms ease, backdrop-filter 180ms ease",
       }}
       onClick={onClose}
     >
@@ -122,6 +137,9 @@ export function ShareModal({
           alignItems: "center",
           gap: 16,
           maxWidth: "90%",
+          transform: animate ? "translateY(0) scale(1)" : "translateY(6px) scale(0.985)",
+          opacity: animate ? 1 : 0,
+          transition: "opacity 180ms ease, transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1)",
         }}
       >
         {/* The Card (Aspect Ratio 9:16) */}
@@ -141,6 +159,7 @@ export function ShareModal({
             position: "relative",
             overflow: "hidden",
             border: "1px solid rgba(255,255,255,0.15)",
+            transition: "transform 180ms ease, box-shadow 180ms ease",
           }}
         >
           {/* Card Top Branding */}
@@ -154,7 +173,7 @@ export function ShareModal({
           {/* Card Body - Persona & Streaks */}
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", marginTop: 20 }}>
             <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "1px", opacity: 0.7 }}>
-              {lang === "en" ? "My Music Persona" : "Karakter Musikmu"}
+              {copy.persona}
             </div>
             <div style={{ fontSize: 26, fontWeight: 900, marginTop: 4, textShadow: "0 2px 4px rgba(0,0,0,0.2)" }}>
               {personaTitle}
@@ -172,7 +191,7 @@ export function ShareModal({
                   border: "1px solid rgba(255,255,255,0.1)",
                 }}
               >
-                🔥 {currentStreak} {lang === "en" ? "Day Streak!" : "Hari Beruntun!"}
+                🔥 {currentStreak} {copy.dayStreak}
               </div>
             )}
           </div>
@@ -181,13 +200,13 @@ export function ShareModal({
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, background: "rgba(0,0,0,0.15)", padding: 14, borderRadius: 10, backdropFilter: "blur(2px)" }}>
             <div>
               <div style={{ fontSize: 9, opacity: 0.7, textTransform: "uppercase" }}>
-                {lang === "en" ? "Plays" : "Putar"}
+                {copy.plays}
               </div>
               <div style={{ fontSize: 16, fontWeight: 800 }}>{totalPlays}</div>
             </div>
             <div>
               <div style={{ fontSize: 9, opacity: 0.7, textTransform: "uppercase" }}>
-                {lang === "en" ? "Listen Time" : "Waktu Dengar"}
+                {copy.listenTime}
               </div>
               <div style={{ fontSize: 16, fontWeight: 800 }}>{timeStr}</div>
             </div>
@@ -206,7 +225,7 @@ export function ShareModal({
                 </div>
                 <div style={{ minWidth: 0 }}>
                   <div style={{ fontSize: 10, opacity: 0.6, textTransform: "uppercase", letterSpacing: ".5px" }}>
-                    {lang === "en" ? "Top Track" : "Lagu Teratas"}
+                    {copy.topTrack}
                   </div>
                   <div style={{ fontSize: topTrack.name.length > 28 ? 9 : topTrack.name.length > 18 ? 10 : 12, lineHeight: "14px", fontWeight: 700, overflowWrap: "anywhere", wordBreak: "break-word", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
                     {topTrack.name}
@@ -229,7 +248,7 @@ export function ShareModal({
                 </div>
                 <div style={{ minWidth: 0 }}>
                   <div style={{ fontSize: 10, opacity: 0.6, textTransform: "uppercase", letterSpacing: ".5px" }}>
-                    {lang === "en" ? "Top Artist" : "Artis Teratas"}
+                    {copy.topArtist}
                   </div>
                   <div style={{ fontSize: topArtist.name.length > 28 ? 9 : topArtist.name.length > 18 ? 10 : 12, lineHeight: "14px", fontWeight: 700, overflowWrap: "anywhere", wordBreak: "break-word", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
                     {topArtist.name}
@@ -241,19 +260,18 @@ export function ShareModal({
 
           {/* Card Bottom Branding */}
           <div style={{ display: "flex", justifyContent: "center", opacity: 0.6, fontSize: 9, letterSpacing: ".5px", marginTop: 10 }}>
-            {lang === "en" ? "POWERED BY SPICETIFY" : "DIHITUNG OLEH SPICETIFY"}
+            {copy.poweredBy}
           </div>
         </div>
 
         {/* Modal Controls */}
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
           <div style={{ fontSize: 11, color: "var(--spice-subtext)", textAlign: "center" }}>
-            {lang === "en" 
-              ? "📸 Take a screenshot (Win + Shift + S) to share!" 
-              : "📸 Ambil screenshot (Win + Shift + S) untuk membagikan!"}
+            📸 {copy.screenshotHint}
           </div>
           <div
             onClick={onClose}
+            className="li-action-button"
             style={{
               padding: "8px 24px",
               borderRadius: 20,
@@ -265,7 +283,7 @@ export function ShareModal({
               userSelect: "none",
             }}
           >
-            {lang === "en" ? "Close" : "Tutup"}
+            {copy.close}
           </div>
         </div>
       </div>

@@ -2,6 +2,7 @@
 // Data aggregation helpers
 
 import { PlayEvent } from "./store";
+import locales from "./locales.json";
 
 // matrix[hour 0-23][dow 0-6, Sun=0] = play count
 export function buildMatrix(events: PlayEvent[], days: number): number[][] {
@@ -392,13 +393,14 @@ export function goalProgress(events: PlayEvent[], days: number): GoalProgress[] 
 }
 
 export function recommendations(events: PlayEvent[], days: number, lang: "en" | "id"): Recommendation[] {
+  const copy = locales[lang].analyticsCopy;
   const cutoff = Date.now() - days * 864e5;
   const filtered = events.filter((e) => e.ts > cutoff);
   if (filtered.length === 0) {
     return [
       {
-        title: lang === "id" ? "Mulai dari Daily Mix" : "Start with Daily Mix",
-        desc: lang === "id" ? "Data belum cukup. Putar beberapa lagu dulu." : "Not enough data yet. Play more songs first.",
+        title: copy.dailyMixTitle,
+        desc: copy.dailyMixDesc,
         query: "Daily Mix",
       },
     ];
@@ -412,20 +414,20 @@ export function recommendations(events: PlayEvent[], days: number, lang: "en" | 
 
   return [
     {
-      title: lang === "id" ? "Cocok buat jam aktifmu" : "Fits your active hours",
-      desc: lang === "id" ? `Cari playlist untuk pola ${peak}.` : `Search playlists that match your ${peak} pattern.`,
+      title: copy.activeHoursTitle,
+      desc: formatTemplate(copy.activeHoursDesc, { peak }),
       query: periodQuery,
     },
     {
-      title: lang === "id" ? "Lanjut dari artis favorit" : "More from your favorite artist",
+      title: copy.favoriteArtistTitle,
       desc: baseArtist
-        ? (lang === "id" ? `Temukan lagu mirip ${baseArtist}.` : `Find tracks similar to ${baseArtist}.`)
-        : (lang === "id" ? "Cari lagu mirip artis top kamu." : "Search around your top artist."),
+        ? formatTemplate(copy.favoriteArtistDesc, { artist: baseArtist })
+        : copy.favoriteArtistFallback,
       query: baseArtist ? `artist radio ${baseArtist}` : "artist radio",
     },
     {
-      title: lang === "id" ? "Naikkan eksplorasi" : "Boost discovery",
-      desc: lang === "id" ? "Campur lagu baru agar diversity naik." : "Add new tracks to raise diversity.",
+      title: copy.boostDiscoveryTitle,
+      desc: copy.boostDiscoveryDesc,
       query: "discover weekly",
     },
   ];
@@ -572,6 +574,7 @@ export function moodTimeline(events: PlayEvent[], days: number): MoodPoint[] {
 }
 
 export function miniWrapped(events: PlayEvent[], skips: number[], days: number, lang: "en" | "id"): MiniWrapped {
+  const copy = locales[lang].analyticsCopy;
   const score = listeningScore(events, skips, days).score;
   const best = bestListeningDay(events, days, lang);
   const repeat = repeatAddiction(events, days);
@@ -580,19 +583,23 @@ export function miniWrapped(events: PlayEvent[], skips: number[], days: number, 
   const topArtist = loyalty.artist?.name ?? "-";
 
   return {
-    title: lang === "id" ? `Wrapped Mini ${days} Hari` : `${days}d Mini Wrapped`,
-    lines: lang === "id"
-      ? [`Score ${score}/100`, `Lagu: ${topTrack}`, `Artis: ${topArtist}`, `Hari terbaik: ${best.label} (${best.plays}x)`]
-      : [`Score ${score}/100`, `Track: ${topTrack}`, `Artist: ${topArtist}`, `Best day: ${best.label} (${best.plays}x)`],
+    title: formatTemplate(copy.miniWrappedTitle, { days: String(days) }),
+    lines: [
+      formatTemplate(copy.miniWrappedScore, { score: String(score) }),
+      formatTemplate(copy.miniWrappedTrack, { track: topTrack }),
+      formatTemplate(copy.miniWrappedArtist, { artist: topArtist }),
+      formatTemplate(copy.miniWrappedBestDay, { label: best.label, plays: String(best.plays) }),
+    ],
   };
 }
 
 export function currentTasteHint(events: PlayEvent[], days: number, lang: "en" | "id"): TasteHint {
+  const copy = locales[lang].analyticsCopy;
   const peak = peakTimeOfDay(events, days);
   const artist = topArtists(events, days, 1)[0]?.name;
-  const title = lang === "id" ? "Mode sekarang" : "Current taste mode";
-  const mode = peak === "night" ? (lang === "id" ? "malam intens" : "late-night mode") : peak === "morning" ? (lang === "id" ? "pagi ringan" : "morning lift") : peak === "evening" ? (lang === "id" ? "senja santai" : "evening wind-down") : (lang === "id" ? "fokus siang" : "daytime focus");
-  const artistText = artist ? (lang === "id" ? ` dengan warna ${artist}` : ` shaped by ${artist}`) : "";
+  const title = copy.tasteTitle;
+  const mode = copy.tasteModes[peak];
+  const artistText = artist ? formatTemplate(copy.tasteArtistSuffix, { artist }) : "";
   return {
     title,
     desc: `${mode}${artistText}`,
@@ -601,6 +608,7 @@ export function currentTasteHint(events: PlayEvent[], days: number, lang: "en" |
 }
 
 export function dataQualityStatus(events: PlayEvent[], days: number, lang: "en" | "id"): DataQualityStatus {
+  const copy = locales[lang].analyticsCopy.dataQuality;
   const filtered = eventsInDays(events, days);
   const activeDays = new Set(filtered.map((event) => localDateKey(new Date(event.ts)))).size;
   const sampleSize = filtered.length;
@@ -609,23 +617,16 @@ export function dataQualityStatus(events: PlayEvent[], days: number, lang: "en" 
     sampleSize >= 20 && activeDays >= Math.min(4, days) ? "medium" :
     "low";
 
-  const messageMap = {
-    good: lang === "id" ? "Data cukup kuat untuk insight periode ini." : "Enough data for reliable period insights.",
-    medium: lang === "id" ? "Insight cukup oke, tapi makin akurat kalau data bertambah." : "Insights are usable, but more data will improve accuracy.",
-    low: lang === "id" ? "Data masih sedikit. Insight bisa berubah cepat." : "Low sample size. Insights may change quickly.",
-  };
-
-  return { level, sampleSize, activeDays, message: messageMap[level] };
+  return { level, sampleSize, activeDays, message: copy[level] };
 }
 
 export function syncNotice(events: PlayEvent[], lang: "en" | "id"): SyncNotice {
+  const copy = locales[lang].analyticsCopy.sync;
   if (events.length === 0) {
     return {
       lastTrackedLabel: "-",
       hoursSinceLastEvent: null,
-      message: lang === "id"
-        ? "Belum ada lagu yang tercatat. Spotify Desktop harus terbuka agar tracking berjalan."
-        : "No tracked plays yet. Spotify Desktop must be open for tracking to run.",
+      message: copy.empty,
     };
   }
 
@@ -639,12 +640,15 @@ export function syncNotice(events: PlayEvent[], lang: "en" | "id"): SyncNotice {
     minute: "2-digit",
   });
   const message = hours <= 6
-    ? (lang === "id" ? "Tracking terlihat aktif baru-baru ini." : "Tracking looks recently active.")
+    ? copy.active
     : hours <= 24
-      ? (lang === "id" ? "Tidak ada play tercatat beberapa jam terakhir. Pastikan Spotify Desktop tetap terbuka." : "No plays tracked in the last several hours. Keep Spotify Desktop open.")
-      : (lang === "id" ? "Gap tracking cukup lama. Plays saat Desktop tertutup tidak bisa direkam." : "Long tracking gap. Plays while Desktop is closed cannot be recorded.");
+      ? copy.recentGap
+      : copy.longGap;
 
   return { lastTrackedLabel, hoursSinceLastEvent: hours, message };
 }
 
+function formatTemplate(template: string, values: Record<string, string>): string {
+  return Object.entries(values).reduce((text, [key, value]) => text.replace(`{${key}}`, value), template);
+}
 

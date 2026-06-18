@@ -1,6 +1,6 @@
 # 📊 Listening Insights for Spicetify
 
-A gorgeous, premium dashboard for Spotify Desktop that turns your playback history into beautiful, actionable listening insights. Track your musical habits, analyze your active music vibe, monitor streaks, compare periods, back up local data, and see when you listen to music most with interactive heatmap grids.
+A gorgeous, premium dashboard for Spotify Desktop that turns your playback history into beautiful, actionable listening insights. Track your musical habits, monitor streaks, compare periods, back up local data, and see when you listen to music most with interactive heatmap grids.
 
 ![Listening Insights Preview](preview.png)
 ![Listening Insights Advanced Panels](preview2.png)
@@ -8,20 +8,22 @@ A gorgeous, premium dashboard for Spotify Desktop that turns your playback histo
 ## ✨ Features
 
 - **Interactive Heatmap Grid**: Visualize your daily activity by hour and day of the week. Hover over cells to see exact counts.
-- **Dynamic Vibe & Mood Detection**: Real-time evaluation of your music mood (e.g. *Chill, Gloomy, Cheerful, Intense, Soulful*) using Spotify's Audio Features API.
+- **Tabbed Dashboard Layout**: Keeps the main app focused with Overview, Patterns, Library, and Data sections.
+- **Listening Coach**: Local pattern intelligence that highlights activity shifts, repeat habits, skip hotspots, discovery gaps, and next listening actions.
 - **Consolidated Insights**:
   - **Active Time**: Detects which period of the day (Morning, Afternoon, Evening, Night) you listen to music most.
   - **Music Persona**: Dynamic personality mapping based on your busiest playback times.
   - **Streak Tracker**: Tracks your active consecutive listening days and all-time best streaks.
   - **Skip Rate Analyzer**: Detects how selective you are with an anti-skip filter (fair-play filter that only registers songs played for 20+ seconds).
-  - **Time-of-day Mood Badges**: Displays your typical music mood during morning, afternoon, evening, and night slots.
 - **Top Tracks & Artists**: Beautiful charts displaying your top played tracks and artists with direct playback controls, dynamic cover fetches, and circular avatars.
-- **Monthly Recap**: See this month's plays, top track, top artist, peak hour, unique songs, and current vibe at a glance.
+- **Track & Artist Trend Arrows**: Shows rank movement, new entries, and play-count deltas compared with the previous period.
+- **Library Trend Charts**: Recharts-powered rank movement charts for top tracks and artists with period-over-period deltas.
+- **Monthly Recap**: See this month's plays, top track, top artist, peak hour, and unique songs at a glance.
 - **Listening Goals**: Track active streak, monthly play target, and discovery rate progress.
 - **Genre Insights**: Fetches Spotify artist genre metadata to show what styles dominate your listening.
 - **Listening Heatmap**: Daily contribution-style heatmap for the selected period, making active and quiet days easy to spot.
 - **Smart Recommendations**: Suggests Spotify searches based on your peak listening time, top artists, and discovery habits.
-- **Advanced Taste Signals**: Listening score, best listening day, repeat addiction, artist loyalty, session detection, skip hotspots, period comparison, mood timeline, mini wrapped, and current taste hints.
+- **Advanced Taste Signals**: Listening score, best listening day, repeat addiction, artist loyalty, session detection, skip hotspots, period comparison, active-time trend, mini wrapped, listening coach, and current taste hints.
 - **Data Quality & Sync Notices**: Shows when insights have low sample size and when tracking may have gaps because Spotify Desktop was closed.
 - **Backup & Data Manager**: Export/import local data, inspect storage usage, and clear skip data without wiping play history.
 - **Bilingual Support**: Instant toggle between English and Indonesian.
@@ -85,6 +87,15 @@ If you want to customize or build the extension from source:
    ```
 
 Package/app id: `listening-insights`.
+
+### Source structure
+
+- `src/components/HeatmapPage.tsx`: small dashboard orchestrator.
+- `src/hooks/useListeningDashboard.ts`: local dashboard state and refresh lifecycle.
+- `src/components/tabs/`: tab-level UI sections.
+- `src/components/panels/`: reusable analytics panels.
+- `src/components/advanced/`: advanced insight copy and shared UI helpers.
+- `src/analytics/`: higher-value analytics modules such as Listening Coach.
 
 ## 📦 Release Notes
 See [CHANGELOG.md](CHANGELOG.md) for version history.
